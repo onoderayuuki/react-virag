@@ -1,10 +1,5 @@
 const transpileModules = require("next-transpile-modules")
-
-const withTM = transpileModules(["react-konva","react-image-size"])
-
+const withTM = transpileModules(["react-konva","konva","react-image-size"])
 module.exports = withTM()
 
 
-// module.exports ={
-//   reactStrictMode: true,
-// }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import reactImageSize from "react-image-size";
 import ImageUploading from "react-images-uploading";
+import Image from "next/image";
 
 import { makeStyles } from "@material-ui/core/styles";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
@@ -105,7 +106,7 @@ export default function Add() {
                 <div className="upload__image-wrapper">
                   {imageList.map((image, index) => (
                     <div key={index} className="image-item">
-                      <img src={image["data_url"]} alt="" />
+                      <Image src={image["data_url"]} height={100} width={100} alt="" />
                       <div
                         className={`${classes.update} ${classes.button}`}
                         onClick={() => onImageUpdate(index)}

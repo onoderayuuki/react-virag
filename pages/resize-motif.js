@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import Image from "next/image";
 // import style from "../styles/resize.module.css";
-import firebase,{ db,storage } from "./firebase";
+import firebase,{ db,storage } from "firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
 import SaveRoundedIcon from '@material-ui/icons/SaveRounded';

@@ -116,11 +116,7 @@ export default function Canvas() {
   //キャンバス用データ
 //   const [backImage, setBackImage] = useState({});
 //   const [images, setImages] = useState([]);
-  const motifs = [
-    { src: "./test2.png" },
-    { src: "./test3.png" },
-    { src: "./test4.png" },
-  ];
+
   const [backImage, setBackImage] = useState({
     src: "./back_A4.png",
     x: 0,
@@ -128,8 +124,8 @@ export default function Canvas() {
     rotation: 0,
   });
   const [images, setImages] = useState([
-    { id:"1" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
-    { id:"2" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
+    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
+    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
   ]);
 //   const docRef = db
 //     .collection("users")
@@ -143,7 +139,12 @@ export default function Canvas() {
     // const MotifRef = db.collection("motif");
     // const [motifs, setMotifs] = useState([]);
     const [tagNames, setTagNames] = useState([]);
-
+    const [motifs, setMotifs] = useState([
+      { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
+      { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
+      { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
+      { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
+    ]);
     // useEffect(() => {
     //   docRef
     //   .get()
@@ -206,6 +207,7 @@ export default function Canvas() {
       selectShape(null);
     }
   };
+
   //変更と履歴
   const [history, setHistory] = useState([images]);
   const [historyStep, setHistoryStep] = useState(0);
@@ -217,10 +219,17 @@ export default function Canvas() {
       ...images,
       { id: images.length, src: src, x: x, y: y, rotation: 0 },
     ];
+    // setImages(newImages);
+    // setHistory([...history, newImages]);
+    // setHistoryStep(historyStep + 1);
+    updateImages(newImages);
+  };
+
+  const updateImages=(newImages)=>{
     setImages(newImages);
     setHistory([...history, newImages]);
     setHistoryStep(historyStep + 1);
-  };
+  }
   const handleUndo = () => {
     setHistoryStep(historyStep - 1);
     setImages(history[historyStep]);
@@ -247,6 +256,19 @@ export default function Canvas() {
     boxShadow: 1,
     p: 4,
   };
+
+  //削除
+  const handleDelete = () =>{
+    const newImages =  images.filter(function(image) {
+        return image.id != selectedId;
+    })
+    console.log(selectedId);
+    console.log(newImages);
+    
+    updateImages(newImages);
+    selectShape(null);
+
+  }
 
   //ダウンロードと保存
   const stageRef = useRef(null);
@@ -365,10 +387,11 @@ export default function Canvas() {
                     y: e.target.y(),
                     rotation: e.target.rotation(),
                   };
-                  setImages(newImages);
-                  setHistory([...history, newImages]);
-                  setHistoryStep(historyStep + 1);
-                  // console.log(newImages);
+                  updateImages(newImages);
+                  // setImages(newImages);
+                  // setHistory([...history, newImages]);
+                  // setHistoryStep(historyStep + 1);
+                  // // console.log(newImages);
                 }}
               />
             );
@@ -397,7 +420,7 @@ export default function Canvas() {
         <IconButton disabled={!selectedId} color="primary">
           <QueueRoundedIcon fontSize="large" />
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary">
+        <IconButton disabled={!selectedId} color="primary" onClick={handleDelete}>
           <DeleteRoundedIcon fontSize="large" />
         </IconButton>
         <IconButton disabled={!selectedId} color="primary">

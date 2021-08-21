@@ -27,8 +27,8 @@ import { Stage, Layer, Image, Transformer } from "react-konva";
 import { db } from "firebase";
 import firebase from "firebase/app";
 
-import Header from "./header.js";
-import Toolbar from "./toolbar.jsx";
+import Header from "../components/header.js";
+import Toolbar from "../components/toolbar.jsx";
 import { IconButton } from "@material-ui/core";
 
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {

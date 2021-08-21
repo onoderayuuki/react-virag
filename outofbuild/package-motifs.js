@@ -12,7 +12,7 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 
 import { Dustbin } from "../components/Dustbin";
-import { Box } from "../components/Box";
+import { Box } from "../components/DndBox";
 
 import Header from "./header.js";
 

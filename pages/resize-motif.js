@@ -76,7 +76,15 @@ export default function ResizeMotif(props) {
       db.collection("motif").add({
         height: motif.height,
         width: motif.width,
-        src:props.src
+        src:props.src,
+        tag: ""
+      }).then((docRef) => {
+        console.log("Document written with ID: ", docRef.id);
+        window.location.href='./home'
+
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error);
       });
     }else{
       console.log('set');
@@ -85,10 +93,18 @@ export default function ResizeMotif(props) {
       docRef.set({ 
         height: motif.height,
         width: motif.width,
-        src:props.src
+        src:props.src,
+        tag: props.tag
+      }).then(() => {
+        console.log("Document successfully written!");
+        window.location.href='./home'
+
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
       });
     }
-    window.location.href='./home'
+    // window.location.href='./home'
   }
 
   //数字変更に連動して高さを変える

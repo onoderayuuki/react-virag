@@ -115,6 +115,7 @@ export default function Canvas() {
       { id: "h", height: "100", width: "100", src: "/test2.png", tag: "tag2" }
     ]}
   ]);
+  const [tagNames, setTagNames] = useState([""]);
   
 
   //キャンバス用データ
@@ -136,20 +137,20 @@ export default function Canvas() {
     const SeriesRef = db.collection("series").doc(seriesID);
     const MotifRef = db.collection("motif");
     // const [motifs, setMotifs] = useState([]);
-    const [tagNames, setTagNames] = useState([]);
     const [motifs, setMotifs] = useState([
       { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
       { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
       { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
       { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
     ]);
+    
     useEffect(() => {
       if(designId !="new"){
         designRef.doc(designId)
         .get()
         .then((doc) => {
           if (doc.exists) {
-            console.log("Document data:", doc.data());
+            // console.log("Document data:", doc.data());
             setImages(doc.data().images);
             setBackImage(doc.data().backImage);
           } else {
@@ -161,11 +162,15 @@ export default function Canvas() {
           console.log("Error getting document:", error);
         });
       }
+
       SeriesRef.get()
         .then((doc) => {
           if (doc.exists) {
-            // console.log("Document data:", doc.data());
-            setTagNames(doc.data().tagNames);
+            console.log("Document data:", doc.data());
+            let newTags =doc.data().tagNames;
+            newTags.push("");
+            console.log(newTags);
+            setTagNames(newTags);
           } else {
             console.log("No such document!");
           }
@@ -184,16 +189,10 @@ export default function Canvas() {
             tag: dbData.data().tag,
           }))
         );
-        let array = [];
-        tagNames.map((tagName)=>{
-            const thisMotifs =  motifs.filter(function(motif) {
-                return motif.tag == tagName;
-            })
-            array.push({name: tagName,onoff: true,motifs:thisMotifs});
-        })
-        setTags(array);
       });
+
       return () => MotifData();
+      
 
     }, []);
     
@@ -239,7 +238,19 @@ export default function Canvas() {
   //追加エリア
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    let array = [];
+    tagNames.map((tagName)=>{
+        const thisMotifs =  motifs.filter(function(motif) {
+            return motif.tag == tagName;
+        })
+        array.push({name: tagName,onoff: true,motifs:thisMotifs});
+    })
+    setTags(array);
+    console.log(array);
+
+    setOpen(true)
+  };
   const handleClose = () => setOpen(false);
   const style = {
     position: "absolute",
@@ -335,6 +346,7 @@ export default function Canvas() {
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
       </Header>
+      
       {/* モーダル */}
       <Modal
         open={open}
@@ -383,6 +395,8 @@ export default function Canvas() {
         </div>
         </Box>
       </Modal>
+
+      {/* CANVAS */}
       <Stage
         ref={stageRef}
         width={window.innerWidth * 0.95}

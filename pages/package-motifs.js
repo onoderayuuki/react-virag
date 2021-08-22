@@ -6,6 +6,8 @@ import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import { Input } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
@@ -65,6 +67,33 @@ export default function Package() {
   //保存
   const saveDB = () => {
     console.log("save: ");
+    SeriesRef.set({
+      title: seriesTitle,
+      tagNames: tagNames,
+    });
+    motifs.map((motif)=>{
+      MotifRef.doc(motif.id).update({
+        "series":seriesTitle,
+        "tag": motif.tag
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      });
+    })
+    handleClick();
+  };
+  //保存メッセージ
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
   };
 
   // 変更
@@ -123,6 +152,7 @@ export default function Package() {
     );
   };
 
+
   return (
     <>
       <Header>
@@ -177,6 +207,23 @@ export default function Package() {
           </Grid>
         </Grid>      
         </DndProvider>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="保存しました"
+          action={
+            <>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </>
+        }
+      />
     </>
   );
 }

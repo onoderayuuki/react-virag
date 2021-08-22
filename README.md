@@ -1,5 +1,15 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Virag 
+## 概要
+- 刺繍デザインイメージエディタ
+![image](https://user-images.githubusercontent.com/38471145/130343108-65c0acec-3ee5-4536-9e25-93a644aa0794.png)
 
+## デプロイ環境
+https://react-virag.vercel.app/
+- Hosting: Vercel
+- DB:FireStore
+
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 ## Getting Started
 
 First, run the development server:
@@ -33,6 +43,7 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+
 ## 20210717
 - 以下のエラーが出たためにkonvaのpackage.jsonからtype:moduleの項目を削除した
 ```
@@ -41,7 +52,5 @@ ESモジュールのrequire()はサポートされていません。
 users/sayoko/Documents/GitHub/GS/react-virag/node_modules/konva/lib/Core.jsのrequire()は、最も近い親のpackage.jsonに "type "が含まれている.jsファイルであるため、ESモジュールファイルです。パッケージスコープ内のすべての.jsファイルをESモジュールとして定義する「module」が含まれているからです。
 代わりに Core.js の名前を .cjs に変更するか、import() を使用するように必要なコードを変更するか、または /Users/s/ja から "type": "module" を削除してください。/Users/sayoko/Documents/GitHub/GS/react-virag/node_modules/konva/package.jsonから "module "を削除してください。
 ```
-
-複数CSSが当てられない
-<p className={`${style.hoge} ${style.fafa}`}>
-これでもなんか違うっぽかった
+## 20210822
+コンパイル時にエラーとなるため

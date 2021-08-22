@@ -53,4 +53,7 @@ users/sayoko/Documents/GitHub/GS/react-virag/node_modules/konva/lib/Core.jsのre
 代わりに Core.js の名前を .cjs に変更するか、import() を使用するように必要なコードを変更するか、または /Users/s/ja から "type": "module" を削除してください。/Users/sayoko/Documents/GitHub/GS/react-virag/node_modules/konva/package.jsonから "module "を削除してください。
 ```
 ## 20210822
-コンパイル時にエラーとなるため
+コンパイル時にkonvaとがreact-image-sizeがエラーとなる 
+→　next-transpile-modulesでimage１ーsizeはエラー対応できた。konvaはまだ引っかかる 
+→ next/dynamicを用いてkonvaのSSRレンダリングを回避、部品として利用するコンポーネントをComponentsフォルダに移動
+→　デプロイ

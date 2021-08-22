@@ -7,7 +7,6 @@ import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from '@material-ui/icons/Menu';
 
@@ -33,7 +32,7 @@ export default function header({children}) {
           color="inherit"
           aria-label="menu"
         >
-          <Link href={"/"}>
+        <Link href={"/"} passHref>
             <HomeRoundedIcon  fontSize="large" />
           </Link>
         </IconButton>
@@ -42,9 +41,9 @@ export default function header({children}) {
         </Typography>
         {/* <Link href={"/dbtest"}>TEST</Link> */}
         {children}
-        <Button color="inherit">
+        {/* <Button color="inherit">
           <Link href={"/login"}>Login</Link>
-        </Button>
+        </Button> */}
       </Toolbar>
     </AppBar>
   );

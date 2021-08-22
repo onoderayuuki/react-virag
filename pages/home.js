@@ -8,6 +8,7 @@ import CropOriginalRoundedIcon from "@material-ui/icons/CropOriginalRounded";
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import PhotoAlbumRoundedIcon from '@material-ui/icons/PhotoAlbumRounded';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import Button from "@material-ui/core/Button";
 
 import Box from '@material-ui/core/Box';
 import ImageList from '@material-ui/core/ImageList';
@@ -85,7 +86,7 @@ export default function Home() {
         }))
       );
       console.log(snapshot.docs);
-      
+
     });
     return () => firebaseData();
   }, []);
@@ -127,7 +128,12 @@ export default function Home() {
   }
   return (
     <>
-      <Header />
+      <Header>
+      <Button color="inherit">
+          <Link href={"/login"}>Login</Link>
+        </Button>
+      </Header>
+
       <div className={classes.homeContainer}>
       <ImageListBox  title="公開されているデザイン" itemList={canvasImages}></ImageListBox>
       <ImageListBox title="あなたのデザイン" itemList={[plusBox,...canvasImages]}></ImageListBox>

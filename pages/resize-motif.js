@@ -81,7 +81,6 @@ export default function ResizeMotif(props) {
       }).then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
         window.location.href='./home'
-
       })
       .catch((error) => {
           console.error("Error adding document: ", error);

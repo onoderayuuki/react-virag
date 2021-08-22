@@ -119,8 +119,8 @@ export default function Canvas() {
   
 
   //キャンバス用データ
-//   const [backImage, setBackImage] = useState({});
-//   const [images, setImages] = useState([]);
+  //   const [backImage, setBackImage] = useState({});
+  //   const [images, setImages] = useState([]);
 
   const [backImage, setBackImage] = useState({
     src: "./back_A4.png",
@@ -128,6 +128,7 @@ export default function Canvas() {
     y: 0,
     rotation: 0,
   });
+
   const [images, setImages] = useState([
     { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
     { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
@@ -440,7 +441,7 @@ export default function Canvas() {
       </Stage>
 
       <Toolbar>
-        <IconButton color="primary">
+        <IconButton disabled color="primary" onClick={handleOpen}>
           <FlipToFrontRoundedIcon fontSize="large" />
         </IconButton>
         <IconButton
@@ -463,7 +464,7 @@ export default function Canvas() {
         <IconButton disabled={!selectedId} color="primary" onClick={handleDelete}>
           <DeleteRoundedIcon fontSize="large" />
         </IconButton>
-        <IconButton disabled color="primary">
+        <IconButton disabled color="primary" onClick={handleOpen}>
           <LoopRoundedIcon fontSize="large" />
         </IconButton>
       </Toolbar>

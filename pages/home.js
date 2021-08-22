@@ -16,6 +16,8 @@ import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 
 import Header from "../components/header.js";
 
+import { db } from "../components/firebase";
+
 const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
@@ -61,13 +63,34 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const plusBox = { id:"BnQefnu48iQeVYDCa8hw" ,src:"/plusbox.png"}
+  const [plusBox,setPlusBox] = useState({ id:"new" ,src:"/plusbox.png"});
   const [canvasImages, setcanvasImages] = useState([
     { id: "1", src: "/canvas-image.png"},
     { id: "2", src: "/canvas-image.png"},
     { id: "3", src: "/canvas-image.png"},
     { id: "4", src: "/canvas-image.png"},
   ]);
+
+  const userId = "ZZeI9mOadD7wxmT26dqB";
+
+  useEffect(() => {
+    const firebaseData = db.collection("users")
+    .doc(userId)
+    .collection("design")
+    .onSnapshot((snapshot) => {
+      setcanvasImages(
+        snapshot.docs.map((dbData) => ({
+          id: dbData.id,
+          src: dbData.data().base64,
+        }))
+      );
+      console.log(snapshot.docs);
+      
+    });
+    return () => firebaseData();
+  }, []);
+
+
   const ImageListBox = ({title,itemList}) =>{
     return(
       <Box className={classes.box}>
@@ -82,7 +105,8 @@ export default function Home() {
               }} passHref>
               <Image src={item.src} alt="#" height="200px" width="150px"/>
             </Link>
-            {item.id>0 && <ImageListItemBar
+            {item.id>0 && 
+            <ImageListItemBar
               title="準備中：押せません"
               classes={{
                 root: classes.titleBar,

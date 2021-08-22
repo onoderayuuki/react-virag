@@ -106,11 +106,11 @@ export default function Canvas() {
       { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "tag0" },
       { id: "dddd", height: "100", width: "100", src: "/test4.png", tag: "tag0" }]
     },
-    {name:"tag1",onoff:false,motifs:[
+    {name:"tag1",onoff:true,motifs:[
       { id: "a", height: "100", width: "100", src: "/test.png", tag: "tag1" },
       { id: "b", height: "100", width: "100", src: "/test2.png", tag: "tag1" }
     ]}, 
-    {name:"tag2",onoff:false,motifs:[
+    {name:"tag2",onoff:true,motifs:[
       { id: "f", height: "100", width: "100", src: "/test.png", tag: "tag2" },
       { id: "h", height: "100", width: "100", src: "/test2.png", tag: "tag2" }
     ]}
@@ -131,13 +131,7 @@ export default function Canvas() {
     { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
     { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
   ]);
-  const docRef = db
-    .collection("users")
-    .doc(userId)
-    .collection("design")
-    .doc(designId);
-    
-    
+    const designRef = db.collection("users").doc(userId).collection("design");
     const seriesID = "IC3cHj3Vew9FUuy84BUg";
     const SeriesRef = db.collection("series").doc(seriesID);
     const MotifRef = db.collection("motif");
@@ -150,22 +144,23 @@ export default function Canvas() {
       { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
     ]);
     useEffect(() => {
-      docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          console.log("Document data:", doc.data());
-          setImages(doc.data().images);
-          setBackImage(doc.data().backImage);
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
-
+      if(designId !="new"){
+        designRef.doc(designId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            console.log("Document data:", doc.data());
+            setImages(doc.data().images);
+            setBackImage(doc.data().backImage);
+          } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+      }
       SeriesRef.get()
         .then((doc) => {
           if (doc.exists) {
@@ -178,6 +173,7 @@ export default function Canvas() {
         .catch((error) => {
           console.log("Error getting document:", error);
         });
+
       const MotifData = MotifRef.onSnapshot((snapshot) => {
         setMotifs(
           snapshot.docs.map((dbData) => ({
@@ -223,9 +219,6 @@ export default function Canvas() {
       ...images,
       { id: images.length, src: src, x: x, y: y, rotation: 0 },
     ];
-    // setImages(newImages);
-    // setHistory([...history, newImages]);
-    // setHistoryStep(historyStep + 1);
     updateImages(newImages);
   };
 
@@ -266,8 +259,6 @@ export default function Canvas() {
     const newImages =  images.filter(function(image) {
         return image.id != selectedId;
     })
-    // console.log(selectedId);
-    // console.log(newImages);
     updateImages(newImages);
     selectShape(null);
   }
@@ -296,12 +287,33 @@ export default function Canvas() {
 
   const saveDB = () => {
     console.log("save: ", designId);
-    docRef.set({
-      backImage: backImage,
-      images: images,
-      base64: stageRef.current.toDataURL(),
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    });
+    if(designId =="new"){
+      designRef.add({
+        backImage: backImage,
+        images: images,
+        base64: stageRef.current.toDataURL(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+      })
+      .catch((error) => {
+          console.error("Error adding document: ", error);
+      });
+    }else{
+      designRef.doc(designId).set({
+        backImage: backImage,
+        images: images,
+        base64: stageRef.current.toDataURL(),
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      })
+      .then(() => {
+        console.log("Document successfully written!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+  }
   };
 
   const handleTagClick=(i) =>{
@@ -338,7 +350,7 @@ export default function Canvas() {
                 key = {i}
                 label={tag.name}
                 clickable
-                color={tag.onoff ? "primary":"" }
+                color={tag.onoff ? "primary":"default" }
                 style={{ marginLeft:'4px' }}
                 onClick={() => handleTagClick(i)}
               />
@@ -398,8 +410,6 @@ export default function Canvas() {
                 }}
                 onChange={(e) => {
                   console.log(e.target.x());
-                  // console.log(e.target.y())
-                  // console.log(e.target.rotation())
                   const newImages = images.slice();
                   newImages[i] = {
                     ...image,
@@ -408,10 +418,6 @@ export default function Canvas() {
                     rotation: e.target.rotation(),
                   };
                   updateImages(newImages);
-                  // setImages(newImages);
-                  // setHistory([...history, newImages]);
-                  // setHistoryStep(historyStep + 1);
-                  // // console.log(newImages);
                 }}
               />
             );

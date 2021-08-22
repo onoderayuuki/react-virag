@@ -21,14 +21,17 @@ import Header from "../components/header.js";
 import { db } from "../components/firebase";
 
 export default function Package() {
-  const [seriesTitle, setSeriesTitle] = useState("untitle-test");
-  const [tagNames, setTagNames] = useState(["tag0", "tag1", "tag2"]);
-  const [motifs, setMotifs] = useState([
-    { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
-    { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
-    { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
-    { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
-  ]);
+  // const [seriesTitle, setSeriesTitle] = useState("untitle-test");
+  // const [tagNames, setTagNames] = useState(["tag0", "tag1", "tag2"]);
+  // const [motifs, setMotifs] = useState([
+  //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
+  //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
+  //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
+  //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
+  // ]);
+  const [seriesTitle, setSeriesTitle] = useState("");
+  const [tagNames, setTagNames] = useState([]);
+  const [motifs, setMotifs] = useState([]);
 
   //データ取得
   const seriesID = "IC3cHj3Vew9FUuy84BUg";
@@ -209,7 +212,7 @@ export default function Package() {
         </DndProvider>
         <Snackbar
           anchorOrigin={{
-            vertical: 'bottom',
+            vertical: 'top',
             horizontal: 'left',
           }}
           open={open}

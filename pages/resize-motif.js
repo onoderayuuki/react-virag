@@ -1,7 +1,7 @@
 import React, { useState,useEffect } from "react";
 import Image from "next/image";
 // import style from "../styles/resize.module.css";
-import firebase,{ db,storage } from "firebase";
+import firebase,{ db,storage } from "../components/firebase";
 
 import { makeStyles } from "@material-ui/core/styles";
 import SaveRoundedIcon from '@material-ui/icons/SaveRounded';
@@ -101,7 +101,15 @@ export default function ResizeMotif(props) {
       console.log('change');
     }
   }
-
+  const changeWidth = (newWidth) => {
+    // console.log(newHeight);
+    if(newWidth != '' ){
+      const oldWidth = motif.width;
+      const newHeight = motif.height*newWidth/oldWidth;
+      setMotif({...motif ,height: newHeight, width: newWidth})
+      console.log('change');
+    }
+  }
 
   useEffect(()=>{
     // console.log(props.height);

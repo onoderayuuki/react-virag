@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "firebase";
+import { db } from "../components/firebase";
 import Image from "next/image";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,7 +10,7 @@ import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import HeightRoundedIcon from '@material-ui/icons/HeightRounded';
 
 import ResizeMotif from './resize-motif'
-import Header from "./header.js";
+import Header from "../components/header.js";
 import Footer from "./footer.js";
 
 const useStyles = makeStyles({

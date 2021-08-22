@@ -24,7 +24,7 @@ import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
-import { db } from "firebase";
+import { db } from "../components/firebase";
 import firebase from "firebase/app";
 
 import Header from "../components/header.js";

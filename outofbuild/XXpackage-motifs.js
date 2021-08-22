@@ -14,7 +14,7 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { Dustbin } from "../components/Dustbin";
 import { Box } from "../components/DndBox";
 
-import Header from "./header.js";
+import Header from "../components/header.js";
 
 import { db } from "../components/firebase";
 
@@ -44,34 +44,34 @@ export default function Package() {
   const seriesID = "IC3cHj3Vew9FUuy84BUg";
   const SeriesRef = db.collection("series").doc(seriesID);
   const MotifRef = db.collection("motif");
-  // useEffect(() => {
-  //   SeriesRef.get()
-  //     .then((doc) => {
-  //       if (doc.exists) {
-  //         console.log("Document data:", doc.data());
-  //         setSeriesTitle(doc.data().title);
-  //         setTagNames(doc.data().tagNames);
-  //       } else {
-  //         console.log("No such document!");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log("Error getting document:", error);
-  //     });
-  //   const MotifData = MotifRef.onSnapshot((snapshot) => {
-  //     setMotifs(
-  //       snapshot.docs.map((dbData) => ({
-  //         id: dbData.id,
-  //         height: dbData.data().height,
-  //         width: dbData.data().width,
-  //         src: dbData.data().src,
-  //         tag: dbData.data().tag,
-  //       }))
-  //     );
-  //     console.log(snapshot.docs);
-  //   });
-  //   return () => MotifData();
-  // }, []);
+  useEffect(() => {
+    SeriesRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          setSeriesTitle(doc.data().title);
+          setTagNames(doc.data().tagNames);
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+    const MotifData = MotifRef.onSnapshot((snapshot) => {
+      setMotifs(
+        snapshot.docs.map((dbData) => ({
+          id: dbData.id,
+          height: dbData.data().height,
+          width: dbData.data().width,
+          src: dbData.data().src,
+          tag: dbData.data().tag,
+        }))
+      );
+      console.log(snapshot.docs);
+    });
+    return () => MotifData();
+  }, []);
   
   //保存
   const saveDB = () => {

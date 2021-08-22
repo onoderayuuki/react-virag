@@ -14,7 +14,7 @@ import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 
-import Header from "./header.js";
+import Header from "../components/header.js";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -79,7 +79,7 @@ export default function Home() {
             <Link href={{
                pathname: "/canvas",
                query: { designId: item.id },
-              }}>
+              }} passHref>
               <Image src={item.src} alt="#" height="200px" width="150px"/>
             </Link>
             {item.id>0 && <ImageListItemBar
@@ -113,7 +113,7 @@ export default function Home() {
         color="inherit"
         aria-label="add"
       >
-        <Link href={"/add-motif"}>
+        <Link href={"/add-motif"} passHref>
           <div className={classes.link}>
             <p>モチーフを追加</p>
             <CropOriginalRoundedIcon fontSize="large"/>
@@ -126,7 +126,7 @@ export default function Home() {
         color="inherit"
         aria-label="list"
       >
-        <Link href={"/list-motif"}>
+        <Link href={"/list-motifs"} passHref>
           <div className={classes.link}>
             <p>モチーフ一覧</p>
             <ListRoundedIcon fontSize="large"/>
@@ -139,7 +139,7 @@ export default function Home() {
         color="inherit"
         aria-label="list"
       >
-        <Link href={"/package-motifs"}>
+        <Link href={"/package-motifs"} passHref>
           <div className={classes.link}>
             <p>シリーズ管理</p>
             <PhotoAlbumRoundedIcon fontSize="large"/>

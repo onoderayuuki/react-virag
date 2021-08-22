@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Grid from "@material-ui/core/Grid";
 import { IconButton,Box } from "@material-ui/core";
@@ -14,7 +14,9 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { Dustbin } from "../components/Dustbin";
 import { DndBox } from "../components/DndBox";
 
-import Header from "./header.js";
+import Header from "../components/header.js";
+
+import { db } from "../components/firebase";
 
 export default function Package() {
   const [seriesTitle, setSeriesTitle] = useState("untitle-test");
@@ -25,6 +27,41 @@ export default function Package() {
     { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
     { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
   ]);
+
+  //データ取得
+  const seriesID = "IC3cHj3Vew9FUuy84BUg";
+  const SeriesRef = db.collection("series").doc(seriesID);
+  const MotifRef = db.collection("motif");
+  useEffect(() => {
+    SeriesRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          setSeriesTitle(doc.data().title);
+          setTagNames(doc.data().tagNames);
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+    const MotifData = MotifRef.onSnapshot((snapshot) => {
+      setMotifs(
+        snapshot.docs.map((dbData) => ({
+          id: dbData.id,
+          height: dbData.data().height,
+          width: dbData.data().width,
+          src: dbData.data().src,
+          tag: dbData.data().tag,
+        }))
+      );
+      console.log(snapshot.docs);
+    });
+    return () => MotifData();
+  }, []);
+  
+
   //保存
   const saveDB = () => {
     console.log("save: ");

@@ -8,7 +8,7 @@ import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import IconButton from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 
-import Header from "./header.js";
+import Header from "../components/header.js";
 import Footer from "./footer.js";
 import ResizeMotif from "./resize-motif";
 

@@ -1,9 +1,10 @@
 // import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import NextImage from "next/image";
 import useImage from "use-image";
+import { triggerBase64Download } from 'react-base64-downloader';
 
 import Box from "@material-ui/core/Box";
 import Modal from "@material-ui/core/Modal";
@@ -24,12 +25,15 @@ import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
-// import { db } from "firebase";
-import firebase from "firebase/app";
 
 import Header from "./header.js";
 import Toolbar from "./toolbar.jsx";
 import { IconButton } from "@material-ui/core";
+
+import firebase from "firebase/app";
+import { db } from "./firebase";
+
+
 
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {
   const shapeRef = useRef();
@@ -90,11 +94,11 @@ const useStyles = makeStyles((theme) => ({
 export default function Canvas() {
   //ID取得
   const userId = "ZZeI9mOadD7wxmT26dqB";
-  // const router = useRouter();
-  // const {
-  //   query: { designId },
-  // } = router;
-  const designId = "BnQefnu48iQeVYDCa8hw";
+  const router = useRouter();
+  const {
+    query: { designId },
+  } = router;
+  // const designId = "BnQefnu48iQeVYDCa8hw";
 
   //追加用データ
   const [tags, setTags] = useState([
@@ -127,16 +131,16 @@ export default function Canvas() {
     { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
     { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
   ]);
-//   const docRef = db
-//     .collection("users")
-//     .doc(userId)
-//     .collection("design")
-//     .doc(designId);
+  const docRef = db
+    .collection("users")
+    .doc(userId)
+    .collection("design")
+    .doc(designId);
     
     
     const seriesID = "IC3cHj3Vew9FUuy84BUg";
-    // const SeriesRef = db.collection("series").doc(seriesID);
-    // const MotifRef = db.collection("motif");
+    const SeriesRef = db.collection("series").doc(seriesID);
+    const MotifRef = db.collection("motif");
     // const [motifs, setMotifs] = useState([]);
     const [tagNames, setTagNames] = useState([]);
     const [motifs, setMotifs] = useState([
@@ -145,57 +149,57 @@ export default function Canvas() {
       { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
       { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
     ]);
-    // useEffect(() => {
-    //   docRef
-    //   .get()
-    //   .then((doc) => {
-    //     if (doc.exists) {
-    //       console.log("Document data:", doc.data());
-    //       setImages(doc.data().images);
-    //       setBackImage(doc.data().backImage);
-    //     } else {
-    //       // doc.data() will be undefined in this case
-    //       console.log("No such document!");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error getting document:", error);
-    //   });
+    useEffect(() => {
+      docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log("Document data:", doc.data());
+          setImages(doc.data().images);
+          setBackImage(doc.data().backImage);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
 
-    //   SeriesRef.get()
-    //     .then((doc) => {
-    //       if (doc.exists) {
-    //         // console.log("Document data:", doc.data());
-    //         setTagNames(doc.data().tagNames);
-    //       } else {
-    //         console.log("No such document!");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log("Error getting document:", error);
-    //     });
-    //   const MotifData = MotifRef.onSnapshot((snapshot) => {
-    //     setMotifs(
-    //       snapshot.docs.map((dbData) => ({
-    //         id: dbData.id,
-    //         height: dbData.data().height,
-    //         width: dbData.data().width,
-    //         src: dbData.data().src,
-    //         tag: dbData.data().tag,
-    //       }))
-    //     );
-    //     let array = [];
-    //     tagNames.map((tagName)=>{
-    //         const thisMotifs =  motifs.filter(function(motif) {
-    //             return motif.tag == tagName;
-    //         })
-    //         array.push({name: tagName,onoff: true,motifs:thisMotifs});
-    //     })
-    //     setTags(array);
-    //   });
-    //   return () => MotifData();
+      SeriesRef.get()
+        .then((doc) => {
+          if (doc.exists) {
+            // console.log("Document data:", doc.data());
+            setTagNames(doc.data().tagNames);
+          } else {
+            console.log("No such document!");
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+      const MotifData = MotifRef.onSnapshot((snapshot) => {
+        setMotifs(
+          snapshot.docs.map((dbData) => ({
+            id: dbData.id,
+            height: dbData.data().height,
+            width: dbData.data().width,
+            src: dbData.data().src,
+            tag: dbData.data().tag,
+          }))
+        );
+        let array = [];
+        tagNames.map((tagName)=>{
+            const thisMotifs =  motifs.filter(function(motif) {
+                return motif.tag == tagName;
+            })
+            array.push({name: tagName,onoff: true,motifs:thisMotifs});
+        })
+        setTags(array);
+      });
+      return () => MotifData();
 
-    // }, []);
+    }, []);
     
   //選択
   const [selectedId, selectShape] = useState(null);
@@ -262,20 +266,34 @@ export default function Canvas() {
     const newImages =  images.filter(function(image) {
         return image.id != selectedId;
     })
-    console.log(selectedId);
-    console.log(newImages);
-    
+    // console.log(selectedId);
+    // console.log(newImages);
     updateImages(newImages);
     selectShape(null);
+  }
 
+  //コピー
+  const handleCopy = () =>{
+    const newOne = images.find(image => image.id == selectedId)
+    const newImages = [
+      ...images,
+      { id: images.length, src: newOne.src, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation },
+    ];
+    // console.log(newImages);
+    updateImages(newImages);
   }
 
   //ダウンロードと保存
+  // const base64 =
+  //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII=';
+
   const stageRef = useRef(null);
   const downloadImage = () => {
     const dataURL = stageRef.current.toDataURL();
     console.log(downloadImage);
+    triggerBase64Download(dataURL, designId);
   };
+
   const saveDB = () => {
     console.log("save: ", designId);
     docRef.set({
@@ -285,6 +303,7 @@ export default function Canvas() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
     });
   };
+
   const handleTagClick=(i) =>{
     const newTags = tags.slice();
     newTags[i]['onoff']=!tags[i]['onoff']
@@ -296,7 +315,8 @@ export default function Canvas() {
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
-        <IconButton disabled color="primary">
+        <IconButton color="primary" 
+         onClick={downloadImage}>
           <SaveAltRoundedIcon fontSize="large" />
         </IconButton>
         <IconButton color="primary" onClick={saveDB}>
@@ -400,7 +420,7 @@ export default function Canvas() {
       </Stage>
 
       <Toolbar>
-        <IconButton color="primary" onClick={downloadImage}>
+        <IconButton color="primary">
           <FlipToFrontRoundedIcon fontSize="large" />
         </IconButton>
         <IconButton
@@ -418,12 +438,12 @@ export default function Canvas() {
           <ArrowForwardIosRoundedIcon fontSize="large" />
         </IconButton>
         <IconButton disabled={!selectedId} color="primary">
-          <QueueRoundedIcon fontSize="large" />
+          <QueueRoundedIcon fontSize="large"  onClick={handleCopy}/>
         </IconButton>
         <IconButton disabled={!selectedId} color="primary" onClick={handleDelete}>
           <DeleteRoundedIcon fontSize="large" />
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary">
+        <IconButton disabled color="primary">
           <LoopRoundedIcon fontSize="large" />
         </IconButton>
       </Toolbar>

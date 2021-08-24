@@ -65,12 +65,13 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const classes = useStyles();
   const [plusBox,setPlusBox] = useState({ id:"new" ,src:"/plusbox.png"});
-  const [canvasImages, setcanvasImages] = useState([
-    { id: "1", src: "/canvas-image.png"},
-    { id: "2", src: "/canvas-image.png"},
-    { id: "3", src: "/canvas-image.png"},
-    { id: "4", src: "/canvas-image.png"},
-  ]);
+  const [canvasImages, setcanvasImages] = useState([]);
+  // const [canvasImages, setcanvasImages] = useState([
+  //   { id: "1", src: "/canvas-image.png"},
+  //   { id: "2", src: "/canvas-image.png"},
+  //   { id: "3", src: "/canvas-image.png"},
+  //   { id: "4", src: "/canvas-image.png"},
+  // ]);
 
   const userId = "ZZeI9mOadD7wxmT26dqB";
 

@@ -23,6 +23,7 @@ import Chip from "@material-ui/core/Chip";
 import DoneIcon from "@material-ui/icons/Done";
 import ImageList from '@material-ui/core/ImageList';
 import ImageListItem from '@material-ui/core/ImageListItem';
+import SwapHorizSharpIcon from '@material-ui/icons/SwapHorizSharp';
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
 
@@ -56,6 +57,7 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
         x={image.x}
         y={image.y}
         rotation={image.rotation}
+        scaleX={image.scaleX}
         draggable={isSelected}
         onClick={onSelect}
         onTap={onSelect}
@@ -130,8 +132,8 @@ export default function Canvas() {
   });
 
   const [images, setImages] = useState([
-    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 },
-    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 },
+    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 ,scaleX:1 ,width:20,height:20},
+    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:20,height:20},
   ]);
     const designRef = db.collection("users").doc(userId).collection("design");
     const seriesID = "IC3cHj3Vew9FUuy84BUg";
@@ -217,7 +219,7 @@ export default function Canvas() {
     const y = Math.floor(Math.random() * 5);
     const newImages = [
       ...images,
-      { id: images.length, src: src, x: x, y: y, rotation: 0 },
+      { id: images.length, src: src, x: x, y: y, rotation: 0,scaleX:1 },
     ];
     updateImages(newImages);
   };
@@ -280,12 +282,25 @@ export default function Canvas() {
     const newOne = images.find(image => image.id == selectedId)
     const newImages = [
       ...images,
-      { id: images.length, src: newOne.src, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation },
+      { id: images.length, src: newOne.src, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation ,scaleX:newOne.scaleX},
     ];
     // console.log(newImages);
     updateImages(newImages);
   }
-
+  //反転
+  const handleMirror = () =>{
+    const selectImage = images.find(image => image.id == selectedId);
+    const nowScaleX = selectImage.scaleX;
+    const otherImages =  images.filter(function(image) {
+      return image.id != selectedId;
+    })
+    const newImages = [
+      ...otherImages,
+      { ...selectImage,scaleX: -nowScaleX},
+    ];
+    console.log({ ...selectImage, x:selectImage.x+300*nowScaleX ,scaleX: -nowScaleX});
+    updateImages(newImages);
+  }
   //ダウンロードと保存
   // const base64 =
   //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII=';
@@ -458,8 +473,11 @@ export default function Canvas() {
         >
           <ArrowForwardIosRoundedIcon fontSize="large" />
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary">
-          <QueueRoundedIcon fontSize="large"  onClick={handleCopy}/>
+        <IconButton disabled={!selectedId} color="primary" onClick={handleCopy}>
+          <QueueRoundedIcon fontSize="large" />
+        </IconButton>
+        <IconButton disabled={!selectedId} color="primary" onClick={handleMirror}>
+          <SwapHorizSharpIcon fontSize="large" />
         </IconButton>
         <IconButton disabled={!selectedId} color="primary" onClick={handleDelete}>
           <DeleteRoundedIcon fontSize="large" />

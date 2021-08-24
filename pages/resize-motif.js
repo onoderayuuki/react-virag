@@ -134,7 +134,7 @@ export default function ResizeMotif(props) {
   return (
     <>
       <div className={ style.resize_container }>
-        <h3  className={style.text}>実際の縮尺を入力してください</h3>
+        <h3  className={style.text}>実際の縮尺を入力してください（mm）</h3>
       <Grid container spacing={1}>
         {/* 上段 */}
         <Grid item xs={3} className={style.heightInput}>

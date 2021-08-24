@@ -56,6 +56,8 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
         alt="#"
         x={image.x}
         y={image.y}
+        height={ image.height *72/25.4}
+        width={ image.width *72/25.4}
         rotation={image.rotation}
         scaleX={image.scaleX}
         draggable={isSelected}
@@ -129,23 +131,26 @@ export default function Canvas() {
     x: 0,
     y: 0,
     rotation: 0,
+    height:297,
+    width:210
   });
 
   const [images, setImages] = useState([
-    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 ,scaleX:1 ,width:20,height:20},
-    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:20,height:20},
+    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 ,scaleX:1 ,width:30,height:30},
+    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:30,height:30},
   ]);
+  //DB取得関連
     const designRef = db.collection("users").doc(userId).collection("design");
     const seriesID = "IC3cHj3Vew9FUuy84BUg";
     const SeriesRef = db.collection("series").doc(seriesID);
     const MotifRef = db.collection("motif");
-    // const [motifs, setMotifs] = useState([]);
-    const [motifs, setMotifs] = useState([
-      { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
-      { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
-      { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
-      { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
-    ]);
+    const [motifs, setMotifs] = useState([]);
+    // const [motifs, setMotifs] = useState([
+    //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
+    //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
+    //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
+    //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
+    // ]);
     
     useEffect(() => {
       if(designId !="new"){
@@ -214,12 +219,13 @@ export default function Canvas() {
   const [history, setHistory] = useState([images]);
   const [historyStep, setHistoryStep] = useState(0);
 
-  const handleAddClick = (src) => {
+  const handleAddClick = (motif) => {
+    console.log(motif);
     const x = Math.floor(Math.random() * 100);
     const y = Math.floor(Math.random() * 5);
     const newImages = [
       ...images,
-      { id: images.length, src: src, x: x, y: y, rotation: 0,scaleX:1 },
+      { id: images.length, src: motif.src, x: x, y: y, rotation: 0,scaleX:1,width:motif.width ,height:motif.height },
     ];
     updateImages(newImages);
   };
@@ -254,6 +260,7 @@ export default function Canvas() {
 
     setOpen(true)
   };
+
   const handleClose = () => setOpen(false);
   const style = {
     position: "absolute",
@@ -269,6 +276,7 @@ export default function Canvas() {
   };
 
   //削除
+  //lengthで生成しているIDがダブってしまうのでは？？？
   const handleDelete = () =>{
     const newImages =  images.filter(function(image) {
         return image.id != selectedId;
@@ -282,7 +290,7 @@ export default function Canvas() {
     const newOne = images.find(image => image.id == selectedId)
     const newImages = [
       ...images,
-      { id: images.length, src: newOne.src, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation ,scaleX:newOne.scaleX},
+      { ...newOne, id: images.length, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation ,scaleX:newOne.scaleX},
     ];
     // console.log(newImages);
     updateImages(newImages);
@@ -400,7 +408,7 @@ export default function Canvas() {
                   height={100}
                   width={100}
                   onClick={(e) => {
-                    handleAddClick(e.target.src);
+                    handleAddClick(motif);
                   }}
                 />
                   )}

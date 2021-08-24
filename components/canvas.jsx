@@ -174,10 +174,10 @@ export default function Canvas() {
       SeriesRef.get()
         .then((doc) => {
           if (doc.exists) {
-            console.log("Document data:", doc.data());
+            // console.log("Document data:", doc.data());
             let newTags =doc.data().tagNames;
             newTags.push("");
-            console.log(newTags);
+            // console.log(newTags);
             setTagNames(newTags);
           } else {
             console.log("No such document!");
@@ -201,14 +201,22 @@ export default function Canvas() {
 
       return () => MotifData();
       
-
     }, []);
-    
+
+   const handleTouch = (e) =>{    
+    //  console.log(e.target.getStage().scaleX());
+     const stage = e.target.getStage()
+     if(e.evt.touches.length >= 2) {
+       getMultiTouchOnStage(e.evt.touches[0], e.evt.touches[1],stage);
+      }else{
+      checkDeselect(e);
+    }     
+   };
   //選択
   const [selectedId, selectShape] = useState(null);
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
-    console.log(e.target);
+    // console.log(e.target);
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
@@ -295,6 +303,7 @@ export default function Canvas() {
     // console.log(newImages);
     updateImages(newImages);
   }
+
   //反転
   const handleMirror = () =>{
     const selectImage = images.find(image => image.id == selectedId);
@@ -309,6 +318,7 @@ export default function Canvas() {
     console.log({ ...selectImage, x:selectImage.x+300*nowScaleX ,scaleX: -nowScaleX});
     updateImages(newImages);
   }
+
   //ダウンロードと保存
   // const base64 =
   //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII=';
@@ -359,6 +369,71 @@ export default function Canvas() {
     // console.log(tags[i]['onoff']);
   };
 
+  //ページの拡大縮小
+  const getCenter=(p1, p2) =>{
+    return {
+      x: (p1.x + p2.x) / 2,
+      y: (p1.y + p2.y) / 2,
+    };
+  };
+  const getDistance=(p1, p2) => {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+  };
+  const [lastDist,setLastDist] =useState(null);
+  const [lastCenter,setLastCenter] =useState(null);
+
+  const getMultiTouchOnStage = (touch1, touch2 , stage) => {
+    if (touch1 && touch2) {
+      // if the stage was under Konva's drag&drop
+      // we need to stop it, and implement our own pan logic with two pointers
+      const P1 = {
+        x: touch1.clientX,
+        y: touch1.clientY,
+      };
+      const P2 = {
+        x: touch2.clientX,
+        y: touch2.clientY,
+      };
+
+      // console.log(P1,P2);
+
+      const newCenter = getCenter(P1, P2);
+      const dist = getDistance(P1, P2);
+
+      const ratio = lastDist ? (dist / lastDist) :1 ;
+      const scale = stage.scaleX() * ratio ;
+      console.log(dist,lastDist)
+      console.log(stage.scaleX(),ratio)
+      // console.log(ratio,scale)
+      
+      // local coordinates of center point
+      const pointTo = {
+        x: (newCenter.x - stage.x()) / stage.scaleX(),
+        y: (newCenter.y - stage.y()) / stage.scaleY(),
+      };
+      // // calculate new position of the stage
+      const dx = lastCenter ? (newCenter.x - lastCenter.x) : 0;
+      const dy = lastCenter ? (newCenter.y - lastCenter.y) : 0;
+      
+      const newPos = {
+        x: newCenter.x - pointTo.x * scale + dx,
+        y: newCenter.y - pointTo.y * scale + dy,
+      };
+
+      console.log(stage.position(),stage.x(),stage.y());
+      stage.scaleX(scale);
+      stage.scaleY(scale);
+      stage.position(newPos);
+
+      setLastDist(dist);
+      setLastCenter(newCenter);
+
+    }
+  }
+  const handleTouchEnd = () =>{
+    setLastDist(null);
+    setLastCenter(null);
+  }
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
@@ -425,8 +500,13 @@ export default function Canvas() {
         ref={stageRef}
         width={window.innerWidth * 0.95}
         height={window.innerHeight * 0.85}
-        onMouseDown={checkDeselect}
-        onTouch={checkDeselect}
+        x={0}
+        y={0}
+        scaleX={0.5}
+        scaleY={0.5}
+        // onMouseDown={checkDeselect}
+        onTouchMove = {handleTouch}
+        onTouchEnd = {handleTouchEnd}
       >
         <Layer>
           <URLImage
@@ -463,6 +543,7 @@ export default function Canvas() {
         </Layer>
       </Stage>
 
+      {/* FOOTER */}
       <Toolbar>
         <IconButton disabled color="primary" onClick={handleOpen}>
           <FlipToFrontRoundedIcon fontSize="large" />

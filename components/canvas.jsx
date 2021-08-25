@@ -95,6 +95,77 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const MotifsModal =({open,handleClose,tags,
+  
+}) =>{
+  //TODO : tagsはおそらくここでとれる
+  const classes = useStyles();
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100%",
+    height: "50vh",
+    bgcolor: "background.paper",
+    border: "2px solid #000",
+    boxShadow: 1,
+    p: 4,
+  };
+
+return (
+        <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box>
+            {!fixed && tags.map((tag,i) => {
+              return(
+                <Chip
+                key = {i}
+                label={tag.name}
+                clickable
+                color={tag.onoff ? "primary":"default" }
+                style={{ marginLeft:'4px' }}
+                onClick={() => handleTagClick(i)}
+              />
+              );
+            })}
+          </Box>
+          <div className={classes.root}>
+          <ImageList className={classes.imageList} rowHeight={100} cols={2}>
+          {tags.map((tag) => (
+            tag.motifs.map((motif,i) => (
+              tag.onoff && (<ImageListItem 
+                key={i} 
+                // cols={motif.cols || 1}
+              >
+                {motif.src != "" && (
+                  <NextImage
+                  key={i}
+                  src={motif.src}
+                  height={100}
+                  width={100}
+                  onClick={(e) => {
+                    handleAddClick(motif);
+                  }}
+                />
+                  )}
+                </ImageListItem>)
+              ))
+            ))}
+        </ImageList>
+        </div>
+        </Box>
+      </Modal>
+);
+
+}
+
+
 export default function Canvas() {
   //ID取得
   const userId = "ZZeI9mOadD7wxmT26dqB";
@@ -253,8 +324,14 @@ export default function Canvas() {
   };
 
   //追加エリア
-  const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [fix,setFix] = useState(false);
+  //新規画面の時は背景選択モーダルから開始
+  if(designId =="new"){
+    setOpen(true);
+    setFix(true);
+    //TODO : tagsのonoffを設定する！
+  }
   const handleOpen = () => {
     let array = [];
     tagNames.map((tagName)=>{
@@ -270,18 +347,7 @@ export default function Canvas() {
   };
 
   const handleClose = () => setOpen(false);
-  const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%",
-    height: "50vh",
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 1,
-    p: 4,
-  };
+
 
   //削除
   //lengthで生成しているIDがダブってしまうのでは？？？
@@ -446,54 +512,11 @@ export default function Canvas() {
         </IconButton>
       </Header>
       
-      {/* モーダル */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Box>
-            {tags.map((tag,i) => {
-              return(
-                <Chip
-                key = {i}
-                label={tag.name}
-                clickable
-                color={tag.onoff ? "primary":"default" }
-                style={{ marginLeft:'4px' }}
-                onClick={() => handleTagClick(i)}
-              />
-              );
-            })}
-          </Box>
-          <div className={classes.root}>
-          <ImageList className={classes.imageList} rowHeight={100} cols={2}>
-          {tags.map((tag) => (
-            tag.motifs.map((motif,i) => (
-              tag.onoff && (<ImageListItem 
-                key={i} 
-                // cols={motif.cols || 1}
-              >
-                {motif.src != "" && (
-                  <NextImage
-                  key={i}
-                  src={motif.src}
-                  height={100}
-                  width={100}
-                  onClick={(e) => {
-                    handleAddClick(motif);
-                  }}
-                />
-                  )}
-                </ImageListItem>)
-              ))
-            ))}
-        </ImageList>
-        </div>
-        </Box>
-      </Modal>
+      <MotifsModal open = {open} handleClose={handleClose} tags={tags}
+      // handleTagClick={handleTagClick} 
+      // handleAddClick={handleAddClick}
+      // fixed={fix}
+      />
 
       {/* CANVAS */}
       <Stage

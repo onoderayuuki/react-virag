@@ -127,7 +127,7 @@ export default function Canvas() {
   //   const [images, setImages] = useState([]);
 
   const [backImage, setBackImage] = useState({
-    src: "./back_A4.png",
+    src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
     x: 0,
     y: 0,
     rotation: 0,
@@ -135,10 +135,11 @@ export default function Canvas() {
     width:210
   });
 
-  const [images, setImages] = useState([
-    { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 ,scaleX:1 ,width:30,height:30},
-    { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:30,height:30},
-  ]);
+  // const [images, setImages] = useState([
+  //   { id:"1acd" ,src: "./test2.png", x: 100, y: 20, rotation: 0 ,scaleX:1 ,width:30,height:30},
+  //   { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:30,height:30},
+  // ]);
+  const [images, setImages] = useState([]);
   //DB取得関連
     const designRef = db.collection("users").doc(userId).collection("design");
     const seriesID = "IC3cHj3Vew9FUuy84BUg";

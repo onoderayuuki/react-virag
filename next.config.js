@@ -1,7 +1,11 @@
 const transpileModules = require("next-transpile-modules")
 const withTM = transpileModules(["react-image-size"])
-module.exports = withTM()
-
+module.exports = withTM( {
+    images: {
+      domains: ['firebasestorage.googleapis.com'],
+    },
+  }
+  )
 // const path = require('path')
 
 // function generateIncludes(modules) {

@@ -1,8 +1,12 @@
 // import { getAuth, signInAnonymously } from "firebase/auth";
 import { auth } from "../components/firebase";
 import { db } from "../components/firebase";
+import { useState,createContext } from "react";
+import Child from "./test-Child";
 
-export default function Login() {
+export const UserContext = createContext()
+
+export default function Parent() {
     const getCurrentDate=(separator='')=>{
         let newDate = new Date()
         let date = newDate.getDate();
@@ -10,7 +14,7 @@ export default function Login() {
         let year = newDate.getFullYear();      
         return `${year}${separator}${month<10?`0${month}`:`${month}`}${separator}${date}`
     }
-
+    const [userID, setUserID] = useState("");
     // const newDate = new Date()
     // console.log(getCurrentDate('/'));
 
@@ -20,7 +24,6 @@ export default function Login() {
             auth.signInAnonymously()
             .then(() => {
                 console.log('create');
-                
             }) 
             .catch((error) => {
                 const errorCode = error.code;
@@ -36,10 +39,11 @@ export default function Login() {
             const firebaseData = db.collection("users")
             .doc(user.uid).get()
             .then((doc) => {
+                setUserID(user.uid);
+                //初回登録処理
                 if (doc.exists) {
                     console.log("Document data:", doc.data());
                 } else {
-                    //初回登録処理
                     db.collection("users").doc(user.uid).set({
                         name: "none",
                         created_at: getCurrentDate('/')
@@ -61,6 +65,12 @@ export default function Login() {
 
 
 
-return (<>login</>);
+return (<>
+<h1>Parent</h1>
+{userID}
+<UserContext.Provider value={userID}>
+    <Child />
+</UserContext.Provider>
+</>);
 }
 

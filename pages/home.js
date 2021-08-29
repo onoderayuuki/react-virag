@@ -19,7 +19,7 @@ import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import Header from "../components/header.js";
 
 import { db } from "../components/firebase";
-import { UserContext } from "./_app.js";
+import { UserContext } from "./_app";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import { db } from "../components/firebase";
+import { UserContext } from "./_app.js";
+
 import Image from "next/image";
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -54,13 +56,35 @@ export default function ListMotifs() {
   ]);
 
   const [selectMotifId, setSelectMotifId] = useState('-1');
-  
+
+  // const userId = "ZZeI9mOadD7wxmT26dqB";
+  const userId = useContext(UserContext);
+
+  useEffect(() => {
+    if(userId){
+      const MotifRef = db.collection("users").doc(userId).collection("motif");
+      const firebaseData = MotifRef.onSnapshot((snapshot) => {
+        setMotifs(
+          snapshot.docs.map((dbData) => ({
+            id: dbData.id,
+            height: dbData.data().height,
+            width: dbData.data().width,
+            src: dbData.data().src,
+          }))
+        );
+        console.log(snapshot.docs);
+      });
+    return () => firebaseData();
+    }
+  }, []);
+
   const handleClick = (id) => {
     setSelectMotifId(parseInt(id));
     console.log(selectMotifId);
   };
+  
   const deleteMotif =(id)=>{
-    db.collection("motif").doc(id).delete().then(() => {
+    MotifRef.doc(id).delete().then(() => {
       console.log("firestore:Document successfully deleted!");
   }).catch((error) => {
       console.error("firestore:Error removing document: ", error);
@@ -68,20 +92,7 @@ export default function ListMotifs() {
   }
 
   // console.log(firebaseApp);
-  useEffect(() => {
-    const firebaseData = db.collection("motif").onSnapshot((snapshot) => {
-      setMotifs(
-        snapshot.docs.map((dbData) => ({
-          id: dbData.id,
-          height: dbData.data().height,
-          width: dbData.data().width,
-          src: dbData.data().src,
-        }))
-      );
-      console.log(snapshot.docs);
-    });
-    return () => firebaseData();
-  }, []);
+
   return (
     <>
       <Header />

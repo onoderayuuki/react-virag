@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useContext} from "react";
 
 import Grid from "@material-ui/core/Grid";
 import { IconButton,Box } from "@material-ui/core";
@@ -19,6 +19,7 @@ import { DndBox } from "../components/DndBox";
 import Header from "../components/header.js";
 
 import { db } from "../components/firebase";
+import { UserContext } from "./_app";
 
 export default function Package() {
   // const [seriesTitle, setSeriesTitle] = useState("untitle-test");
@@ -29,51 +30,71 @@ export default function Package() {
   //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
   //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
   // ]);
-  const [seriesTitle, setSeriesTitle] = useState("");
-  const [tagNames, setTagNames] = useState([]);
+  const [seriesTitle, setSeriesTitle] = useState("シリーズ名");
+  const [tagNames, setTagNames] = useState(["背景","タグ名"]);
   const [motifs, setMotifs] = useState([]);
 
+    // const userId = "ZZeI9mOadD7wxmT26dqB";
+    const userId = useContext(UserContext);
+
   //データ取得
-  const seriesID = "IC3cHj3Vew9FUuy84BUg";
-  const SeriesRef = db.collection("series").doc(seriesID);
-  const MotifRef = db.collection("motif");
   useEffect(() => {
-    SeriesRef.get()
+    if(userId){
+      const MotifRef = db.collection("users").doc(userId).collection("motif");
+      const SeriesRef = db.collection("users").doc(userId).collection("series");
+      const seriesID = "series1";
+      SeriesRef.doc(seriesID).get()
       .then((doc) => {
         if (doc.exists) {
           console.log("Document data:", doc.data());
           setSeriesTitle(doc.data().title);
           setTagNames(doc.data().tagNames);
         } else {
-          console.log("No such document!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
+            //TODO: Seriesの中身追加が必要
+            console.log("No such document!");
+            SeriesRef.doc(seriesID).set({
+              title: seriesTitle,
+              tagNames: tagNames,
+            }).then(()=>{
+              console.log("series1 create");
+            }).catch((error) =>{
+              console.error("Error writing document: ", error);
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+
+      const MotifData = MotifRef.onSnapshot((snapshot) => {
+        setMotifs(
+          snapshot.docs.map((dbData) => ({
+            id: dbData.id,
+            height: dbData.data().height,
+            width: dbData.data().width,
+            src: dbData.data().src,
+            tag: dbData.data().tag,
+          }))
+        );
+        console.log(snapshot.docs);
       });
-    const MotifData = MotifRef.onSnapshot((snapshot) => {
-      setMotifs(
-        snapshot.docs.map((dbData) => ({
-          id: dbData.id,
-          height: dbData.data().height,
-          width: dbData.data().width,
-          src: dbData.data().src,
-          tag: dbData.data().tag,
-        }))
-      );
-      console.log(snapshot.docs);
-    });
-    return () => MotifData();
+      return () => MotifData();
+    }
   }, []);
   
 
   //保存
   const saveDB = () => {
     console.log("save: ");
-    SeriesRef.set({
+    
+    const SeriesRef = db.collection("users").doc(userId).collection("series");
+    const seriesID = "series1";
+    SeriesRef.doc(seriesID).set({
       title: seriesTitle,
       tagNames: tagNames,
     });
+
+    const MotifRef = db.collection("users").doc(userId).collection("motif");
     motifs.map((motif)=>{
       MotifRef.doc(motif.id).update({
         "series":seriesTitle,

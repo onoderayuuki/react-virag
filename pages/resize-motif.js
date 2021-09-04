@@ -1,16 +1,16 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect ,useContext} from "react";
 import Image from "next/image";
 // import style from "../styles/resize.module.css";
-import firebase,{ db,storage } from "../components/firebase";
+import { db, storage } from "../components/firebase";
+import { UserContext } from "./_app.js";
 
 import { makeStyles } from "@material-ui/core/styles";
-import SaveRoundedIcon from '@material-ui/icons/SaveRounded';
-import IconButton from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
+import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
+import IconButton from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 
 import Footer from "./footer.js";
-
 
 const useStyles = makeStyles((theme) => ({
   resize_container: {
@@ -22,38 +22,43 @@ const useStyles = makeStyles((theme) => ({
     height: "80vh",
   },
   image: {
-      paddingLeft:'10px',
-      paddingBottom:'10px',
-      borderBottom:'solid 1px white',
-      borderLeft:'solid 1px white',
+    paddingLeft: "10px",
+    paddingBottom: "10px",
+    borderBottom: "solid 1px white",
+    borderLeft: "solid 1px white",
   },
-  input : {
-      height:'30px',
-      width:'50px',
-      marginLeft:'5px'
+  input: {
+    height: "30px",
+    width: "50px",
+    marginLeft: "5px",
   },
-  heightInput:{
+  heightInput: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
   },
-  widthInput:{
+  widthInput: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
-  text:{
-    color : 'white'
-  }
+  text: {
+    color: "white",
+  },
 }));
 
 export default function ResizeMotif(props) {
   const style = useStyles();
   // const [motif, setMotif] = useState({ id: "1", height: "300", width: "200", src: "/test.png" });
-  const [motif, setMotif] = useState({ id:props.id, height: props.height, width: props.width, src: props.src });
+  const [motif, setMotif] = useState({
+    id: props.id,
+    height: props.height,
+    width: props.width,
+    src: props.src,
+  });
 
-//firebaseStrageに画像登録してパスをfirestoreに保存したい、本当は。
+  //firebaseStrageに画像登録してパスをfirestoreに保存したい、本当は。
   // const handleUpload = async (accepterdImg: any) => {
   //   try {
   //     const uploadTask: any = storage
@@ -68,116 +73,127 @@ export default function ResizeMotif(props) {
   // };
 
   //firebaseに保存
-  //todo:userを取得してuser配下で登録しないといけない
-  const saveDB = ()=>{
-    //追加と変更の場合分けが必要
-    if(motif.id ==""){ 
-      console.log('add');
-      db.collection("motif").add({
-        height: motif.height,
-        width: motif.width,
-        src:props.src,
-        tag: ""
-      }).then((docRef) => {
-        console.log("Document written with ID: ", docRef.id);
-        window.location.href='./home'
-      })
-      .catch((error) => {
-          console.error("Error adding document: ", error);
-      });
-    }else{
-      console.log('set');
-      const docRef = db.collection('motif').doc(motif.id);
-      console.log(docRef);
-      docRef.set({ 
-        height: motif.height,
-        width: motif.width,
-        src:props.src,
-        tag: props.tag
-      }).then(() => {
-        console.log("Document successfully written!");
-        window.location.href='./home'
+  // const userId = "ZZeI9mOadD7wxmT26dqB";
+  const userId = useContext(UserContext);
 
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      });
+  const saveDB = () => {
+    if (userId) {
+      const MotifRef = db.collection("users").doc(userId).collection("motif");
+      if (motif.id == "") {
+        //追加
+        console.log("add");
+        MotifRef.add({
+          height: motif.height,
+          width: motif.width,
+          src: props.src,
+          tag: "",
+        })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+            window.location.href = "./home";
+          })
+          .catch((error) => {
+            console.error("Error adding document: ", error);
+          });
+      } else {
+        //変更
+        console.log("set");
+        const docRef = MotifRef.doc(motif.id);
+        console.log(docRef);
+        docRef
+          .set({
+            height: motif.height,
+            width: motif.width,
+            src: props.src,
+            tag: props.tag,
+          })
+          .then(() => {
+            console.log("Document successfully written!");
+            window.location.href = "./home";
+          })
+          .catch((error) => {
+            console.error("Error writing document: ", error);
+          });
+      }
+      // window.location.href='./home'
     }
-    // window.location.href='./home'
-  }
-
+  };
   //数字変更に連動して高さを変える
   const changeHeight = (newHeight) => {
     // console.log(newHeight);
-    if(newHeight != '' ){
+    if (newHeight != "") {
       const oldHeight = motif.height;
-      const newWidth = motif.width*newHeight/oldHeight;
-      setMotif({...motif ,height: newHeight, width: newWidth})
-      console.log('change');
+      const newWidth = (motif.width * newHeight) / oldHeight;
+      setMotif({ ...motif, height: newHeight, width: newWidth });
+      console.log("change");
     }
-  }
+  };
   const changeWidth = (newWidth) => {
     // console.log(newHeight);
-    if(newWidth != '' ){
+    if (newWidth != "") {
       const oldWidth = motif.width;
-      const newHeight = motif.height*newWidth/oldWidth;
-      setMotif({...motif ,height: newHeight, width: newWidth})
-      console.log('change');
+      const newHeight = (motif.height * newWidth) / oldWidth;
+      setMotif({ ...motif, height: newHeight, width: newWidth });
+      console.log("change");
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(props.height);
     setMotif({ height: props.height, width: props.width, src: props.src });
-  },[props.height, props.width]);
+  }, [props.height, props.width]);
 
   return (
     <>
-      <div className={ style.resize_container }>
-        <h3  className={style.text}>実際の縮尺を入力してください（mm）</h3>
-      <Grid container spacing={1}>
-        {/* 上段 */}
-        <Grid item xs={3} className={style.heightInput}>
-        <input className={style.input} 
-            type="number" 
-            min="1"
-            id="height" 
-            value = { motif.height }
-            onChange={ (e) => changeHeight(e.target.value) }>
-          </input>
-        </Grid>
-        <Grid item xs={9}>
-          <Image
-              src={ motif.src }
-              alt="Motif Image"
-              height={ motif.height *72/25.4}
-              width={ motif.width *72/25.4}
-              style={style.image}
-              />
-        </Grid>
-        {/* 下段 */}
-        <Grid item xs={4}></Grid>
-        <Grid item xs={8} className={style.widthInput}>
-          <input className={style.input} 
+      <div className={style.resize_container}>
+        <h3 className={style.text}>実際の縮尺を入力してください（mm）</h3>
+        <Grid container spacing={1}>
+          {/* 上段 */}
+          <Grid item xs={3} className={style.heightInput}>
+            <input
+              className={style.input}
               type="number"
               min="1"
-              value = { motif.width }
-              onChange={ (e) => changeWidth(e.target.value)}
-             /> 
-            </Grid>
-      </Grid>
+              id="height"
+              value={motif.height}
+              onChange={(e) => changeHeight(e.target.value)}
+            ></input>
+          </Grid>
+          <Grid item xs={9}>
+            <Image
+              src={motif.src}
+              alt="Motif Image"
+              height={(motif.height * 72) / 25.4}
+              width={(motif.width * 72) / 25.4}
+              style={style.image}
+            />
+          </Grid>
+          {/* 下段 */}
+          <Grid item xs={4}></Grid>
+          <Grid item xs={8} className={style.widthInput}>
+            <input
+              className={style.input}
+              type="number"
+              min="1"
+              value={motif.width}
+              onChange={(e) => changeWidth(e.target.value)}
+            />
+          </Grid>
+        </Grid>
       </div>
       <Footer>
-        <IconButton 
-            edge="start"  
-            color="inherit" 
-            aria-label="save" 
-            onClick={()=>{saveDB()}}
-          >
-            <SaveRoundedIcon />
-          </IconButton>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="save"
+          onClick={() => {
+            saveDB();
+          }}
+        >
+          <SaveRoundedIcon />
+        </IconButton>
       </Footer>
     </>
   );
-};
+}
 ResizeMotif.defaultProps = { src: "/test.png" };

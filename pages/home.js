@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
+
 import Link from "next/link";
 import Image from "next/image";
 
@@ -18,6 +19,7 @@ import ImageListItemBar from '@material-ui/core/ImageListItemBar';
 import Header from "../components/header.js";
 
 import { db } from "../components/firebase";
+import { UserContext } from "./_app";
 
 const useStyles = makeStyles((theme) => ({
   menuButton: {
@@ -65,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Home() {
   const classes = useStyles();
   const [plusBox,setPlusBox] = useState({ id:"new" ,src:"/plusbox.png"});
-  const [canvasImages, setcanvasImages] = useState([]);
+  const [canvasImages, setCanvasImages] = useState([]);
   // const [canvasImages, setcanvasImages] = useState([
   //   { id: "1", src: "/canvas-image.png"},
   //   { id: "2", src: "/canvas-image.png"},
@@ -73,23 +75,29 @@ export default function Home() {
   //   { id: "4", src: "/canvas-image.png"},
   // ]);
 
-  const userId = "ZZeI9mOadD7wxmT26dqB";
-
+  // const userId = "ZZeI9mOadD7wxmT26dqB";
+  const userId = useContext(UserContext);
+  
   useEffect(() => {
-    const firebaseData = db.collection("users")
-    .doc(userId)
-    .collection("design")
-    .onSnapshot((snapshot) => {
-      setcanvasImages(
-        snapshot.docs.map((dbData) => ({
-          id: dbData.id,
-          src: dbData.data().base64,
-        }))
-      );
-      console.log(snapshot.docs);
-
-    });
-    return () => firebaseData();
+    console.log(userId);
+    if(userId){
+      const firebaseData = db.collection("users")
+      .doc(userId)
+      .collection("design")
+      .onSnapshot((snapshot) => {
+        console.log("snapshot.docs:",snapshot.docs);
+        if(snapshot.docs){
+          setCanvasImages(
+              snapshot.docs.map((dbData) => ({
+                  id: dbData.id,
+                  src: dbData.data().base64,
+                }))
+              );
+        }
+              
+      });
+      return () => firebaseData();
+    }
   }, []);
 
 

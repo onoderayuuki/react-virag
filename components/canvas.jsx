@@ -1,5 +1,5 @@
 // import Image from "next/image";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef ,useContext } from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import NextImage from "next/image";
@@ -33,6 +33,8 @@ import { IconButton } from "@material-ui/core";
 
 import firebase from "firebase/app";
 import { db } from "./firebase";
+import { UserContext } from "../pages/_app";
+
 
 
 
@@ -97,7 +99,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Canvas() {
   //ID取得
-  const userId = "ZZeI9mOadD7wxmT26dqB";
+  // const userId = "ZZeI9mOadD7wxmT26dqB";
+  const userId = useContext(UserContext);
+
   const router = useRouter();
   const {
     query: { designId },
@@ -127,7 +131,8 @@ export default function Canvas() {
   //   const [images, setImages] = useState([]);
 
   const [backImage, setBackImage] = useState({
-    src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
+    // src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
+    src: "./back_A4.png",
     x: 0,
     y: 0,
     rotation: 0,
@@ -141,12 +146,11 @@ export default function Canvas() {
   // ]);
   const [images, setImages] = useState([]);
   //DB取得関連
-    const designRef = db.collection("users").doc(userId).collection("design");
-    const seriesID = "IC3cHj3Vew9FUuy84BUg";
-    const SeriesRef = db.collection("series").doc(seriesID);
-    const MotifRef = db.collection("motif");
-    const [motifs, setMotifs] = useState([]);
-    // const [motifs, setMotifs] = useState([
+  const seriesID = "IC3cHj3Vew9FUuy84BUg";
+  const SeriesRef = db.collection("series").doc(seriesID);
+  const MotifRef = db.collection("motif");
+  const [motifs, setMotifs] = useState([]);
+  // const [motifs, setMotifs] = useState([
     //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
     //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
     //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
@@ -154,24 +158,26 @@ export default function Canvas() {
     // ]);
     
     useEffect(() => {
-      if(designId !="new"){
-        designRef.doc(designId)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            // console.log("Document data:", doc.data());
-            setImages(doc.data().images);
-            setBackImage(doc.data().backImage);
-          } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
+      if(userId){
+        const designRef = db.collection("users").doc(userId).collection("design");
+        if(designId !="new"){
+          designRef.doc(designId)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              // console.log("Document data:", doc.data());
+              setImages(doc.data().images);
+              setBackImage(doc.data().backImage);
+            } else {
+              // doc.data() will be undefined in this case
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
+        }
       }
-
       SeriesRef.get()
         .then((doc) => {
           if (doc.exists) {
@@ -332,12 +338,15 @@ export default function Canvas() {
   };
 
   const saveDB = () => {
-    console.log("save: ", designId);
+    const scale = 200/(backImage.height*72/25.4);
+    console.log("save: ", designId,);
+    console.log(scale,backImage.height*72/25.4,(backImage.height*72/25.4)*scale);
+    const designRef = db.collection("users").doc(userId).collection("design");
     if(designId =="new"){
       designRef.add({
         backImage: backImage,
         images: images,
-        base64: stageRef.current.toDataURL(),
+        base64: stageRef.current.toDataURL({ pixelRatio: scale }),
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then((docRef) => {
@@ -350,7 +359,7 @@ export default function Canvas() {
       designRef.doc(designId).set({
         backImage: backImage,
         images: images,
-        base64: stageRef.current.toDataURL(),
+        base64: stageRef.current.toDataURL({ pixelRatio: scale }),
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       })
       .then(() => {
@@ -503,8 +512,8 @@ export default function Canvas() {
         height={window.innerHeight * 0.85}
         x={0}
         y={0}
-        scaleX={0.5}
-        scaleY={0.5}
+        scaleX={1}
+        scaleY={1}
         // onMouseDown={checkDeselect}
         onTouchMove = {handleTouch}
         onTouchEnd = {handleTouchEnd}

@@ -234,13 +234,21 @@ export default function Canvas() {
   const [history, setHistory] = useState([images]);
   const [historyStep, setHistoryStep] = useState(0);
 
+  function getUniqueStr(myStrong){
+    var strong = 1000;
+    if (myStrong) strong = myStrong;
+    
+    return new Date().getTime().toString(16) + Math.floor(strong*Math.random()).toString(16)
+  }
+
   const handleAddClick = (motif) => {
-    console.log(motif);
     const x = Math.floor(Math.random() * 100);
     const y = Math.floor(Math.random() * 5);
+    const randomID = getUniqueStr(10);
+    console.log(motif,randomID);
     const newImages = [
       ...images,
-      { id: images.length, src: motif.src, x: x, y: y, rotation: 0,scaleX:1,width:motif.width ,height:motif.height },
+      { id: randomID, src: motif.src, x: x, y: y, rotation: 0,scaleX:1,width:motif.width ,height:motif.height },
     ];
     updateImages(newImages);
   };

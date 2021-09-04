@@ -43,6 +43,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+## Function deploy
+- function/srcの内容がfirestore.functionに反映されるはず
+    -  DBの連動更新用 
+```
+firebase deploy --only functions
+```
 
 ## 20210717
 - 以下のエラーが出たためにkonvaのpackage.jsonからtype:moduleの項目を削除した

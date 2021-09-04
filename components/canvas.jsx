@@ -393,7 +393,7 @@ export default function Canvas() {
   const [lastCenter,setLastCenter] =useState(null);
 
   const getMultiTouchOnStage = (touch1, touch2 , stage) => {
-    if (touch1 && touch2) {
+    if (touch1 && touch2 ) {
       // if the stage was under Konva's drag&drop
       // we need to stop it, and implement our own pan logic with two pointers
       const P1 = {
@@ -431,12 +431,13 @@ export default function Canvas() {
       };
 
       console.log(stage.position(),stage.x(),stage.y());
-      stage.scaleX(scale);
-      stage.scaleY(scale);
-      stage.position(newPos);
-
-      setLastDist(dist);
-      setLastCenter(newCenter);
+      if(scale>0.1){
+        stage.scaleX(scale);
+        stage.scaleY(scale);
+        stage.position(newPos); 
+        setLastDist(dist);
+        setLastCenter(newCenter);
+      }
 
     }
   }
@@ -444,6 +445,7 @@ export default function Canvas() {
     setLastDist(null);
     setLastCenter(null);
   }
+
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>

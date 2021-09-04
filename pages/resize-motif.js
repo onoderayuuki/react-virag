@@ -51,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
 export default function ResizeMotif(props) {
   const style = useStyles();
   // const [motif, setMotif] = useState({ id: "1", height: "300", width: "200", src: "/test.png" });
+  const [inputHeight, setInputHeight] = useState(props.height);
+  const [inputWidth, setInputWidth] = useState(props.width);
+
   const [motif, setMotif] = useState({
     id: props.id,
     height: props.height,
@@ -121,20 +124,24 @@ export default function ResizeMotif(props) {
   //数字変更に連動して高さを変える
   const changeHeight = (newHeight) => {
     // console.log(newHeight);
-    if (newHeight != "") {
-      const oldHeight = motif.height;
-      const newWidth = (motif.width * newHeight) / oldHeight;
-      setMotif({ ...motif, height: newHeight, width: newWidth });
-      console.log("change");
+    const oldHeight = motif.height;
+    const newWidth = (motif.width * newHeight) / oldHeight;
+    setInputHeight(newHeight);
+    setInputWidth(newWidth);
+    if (newHeight != "" && newHeight > 0) {
+        setMotif({ ...motif, height: newHeight, width: newWidth });
+      // console.log("change");
     }
   };
   const changeWidth = (newWidth) => {
     // console.log(newHeight);
-    if (newWidth != "") {
-      const oldWidth = motif.width;
-      const newHeight = (motif.height * newWidth) / oldWidth;
-      setMotif({ ...motif, height: newHeight, width: newWidth });
-      console.log("change");
+    const oldWidth = motif.width;
+    const newHeight = (motif.height * newWidth) / oldWidth;
+    setInputHeight(newHeight);
+    setInputWidth(newWidth);
+    if (newWidth != "" && newWidth > 0) {
+        setMotif({ ...motif, height: newHeight, width: newWidth });
+      // console.log("change");
     }
   };
 
@@ -153,9 +160,8 @@ export default function ResizeMotif(props) {
             <input
               className={style.input}
               type="number"
-              min="1"
               id="height"
-              value={motif.height}
+              value={inputHeight}
               onChange={(e) => changeHeight(e.target.value)}
             ></input>
           </Grid>
@@ -174,8 +180,7 @@ export default function ResizeMotif(props) {
             <input
               className={style.input}
               type="number"
-              min="1"
-              value={motif.width}
+              value={inputWidth}
               onChange={(e) => changeWidth(e.target.value)}
             />
           </Grid>

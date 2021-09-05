@@ -158,51 +158,51 @@ export default function Home() {
           title="あなたのデザイン"
           itemList={[plusBox, ...canvasImages]}
         ></ImageListBox>
-        <Box>
-        <Typography variant="subtitle6" gutterBottom>
-          モチーフ
-        </Typography>
-        <Box>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="add"
-          >
-            <Link href={"/add-motif"} passHref>
-              <div className={classes.link}>
-                <CropOriginalRoundedIcon fontSize="large" />
-                <p>追加</p>
-              </div>
-            </Link>
-          </IconButton>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="list"
-          >
-            <Link href={"/list-motifs"} passHref>
-              <div className={classes.link}>
-                <ListRoundedIcon fontSize="large" />
-                <p>一覧</p>
-              </div>
-            </Link>
-          </IconButton>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="list"
-          >
-            <Link href={"/package-motifs"} passHref>
-              <div className={classes.link}>
-                <PhotoAlbumRoundedIcon fontSize="large" />
-                <p>管理</p>
-              </div>
-            </Link>
-          </IconButton>
-        </Box>
+        <Box className={classes.box}>
+          <Typography variant="subtitle6" gutterBottom>
+            モチーフ
+          </Typography>
+          <Box>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="add"
+            >
+              <Link href={"/add-motif"} passHref>
+                <div className={classes.link}>
+                  <CropOriginalRoundedIcon fontSize="large" />
+                  <p>追加</p>
+                </div>
+              </Link>
+            </IconButton>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="list"
+            >
+              <Link href={"/list-motifs"} passHref>
+                <div className={classes.link}>
+                  <ListRoundedIcon fontSize="large" />
+                  <p>一覧</p>
+                </div>
+              </Link>
+            </IconButton>
+            <IconButton
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="list"
+            >
+              <Link href={"/package-motifs"} passHref>
+                <div className={classes.link}>
+                  <PhotoAlbumRoundedIcon fontSize="large" />
+                  <p>管理</p>
+                </div>
+              </Link>
+            </IconButton>
+          </Box>
         </Box>
       </div>
     </>

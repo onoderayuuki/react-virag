@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   homeContainer: {
-    // height:'90vh',
+    height:'90vh',
     backgroundColor: theme.palette.secondary.light,
     // color:theme.palette.secondary.contrastText
   },

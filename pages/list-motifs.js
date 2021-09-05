@@ -132,16 +132,22 @@ export default function ListMotifs() {
             aria-label="trash" 
             onClick={()=>{deleteMotif(motifs[selectMotifId]['id'])}}
           >
-            <DeleteRoundedIcon />
+            <div>
+              <DeleteRoundedIcon />
+              <p style={{fontSize:'10px'}}>削除</p>
+            </div>
           </IconButton>
           <IconButton 
             edge="start"  
             color="inherit" 
             aria-label="trash" 
             onClick={()=>{setIsShow(true)}}>
-            <HeightRoundedIcon />
+            <div>
+              <HeightRoundedIcon />
+              <p style={{fontSize:'10px'}}>サイズ変更</p>
+            </div>
           </IconButton>
-          <span>{motifs[selectMotifId]['height']}*{motifs[selectMotifId]['width']}</span>
+          {/* <span>{motifs[selectMotifId]['height']}*{motifs[selectMotifId]['width']}</span> */}
           </>}
         </Footer>
         </>

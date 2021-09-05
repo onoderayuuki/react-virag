@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "80vh",
+    height: "90vh",
   },
   button: {
     display: "flex",
@@ -136,7 +136,10 @@ export default function Add() {
                   setIsShow(true);
                 }}
               >
-                <CheckRoundedIcon />
+                <div>
+                    <CheckRoundedIcon />
+                    <p style={{fontSize:'10px'}}>OK</p>
+                </div>
               </IconButton>
           )}
             </Footer>

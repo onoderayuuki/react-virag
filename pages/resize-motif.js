@@ -195,7 +195,10 @@ export default function ResizeMotif(props) {
             saveDB();
           }}
         >
+          <div>
           <SaveRoundedIcon />
+          <p style={{fontSize:'10px'}}>保存</p>
+            </div>
         </IconButton>
       </Footer>
     </>

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme)=>({
     fontSize: '8px',
     color:'white',
     width:'100%',
-    backgroundColor:theme.palette.background.paper
+    // backgroundColor:theme.palette.background.paper
   }
 }));
 

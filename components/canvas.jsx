@@ -18,6 +18,7 @@ import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import LoopRoundedIcon from "@material-ui/icons/LoopRounded";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import SaveAltRoundedIcon from "@material-ui/icons/SaveAltRounded";
+import ShareRoundedIcon from '@material-ui/icons/ShareRounded';
 import Chip from "@material-ui/core/Chip";
 // import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from "@material-ui/icons/Done";
@@ -50,7 +51,7 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
     // console.log(trRef.current);
   }, [isSelected]);
 
-  const [img] = useImage(image.src);
+  const [img] = useImage(image.src,'Anonymous');
   return (
     <>
       <Image
@@ -131,8 +132,8 @@ export default function Canvas() {
   //   const [images, setImages] = useState([]);
 
   const [backImage, setBackImage] = useState({
-    // src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
-    src: "./back_A4.png",
+    src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
+    // src: "./back_A4.png",
     x: 0,
     y: 0,
     rotation: 0,
@@ -458,11 +459,28 @@ export default function Canvas() {
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
         <IconButton color="primary" 
+        style={{padding:'4px'}}
          onClick={downloadImage}>
+           <div>
           <SaveAltRoundedIcon fontSize="large" />
+          <p style={{fontSize:'9px',margin:'1px'}}>ダウンロード</p>
+          </div>
         </IconButton>
-        <IconButton color="primary" onClick={saveDB}>
+        <IconButton color="primary" 
+        style={{padding:'4px'}}
+        >
+          <div>
+          <ShareRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px',margin:'1px'}}>共有</p>
+          </div>
+        </IconButton>
+        <IconButton color="primary" 
+        style={{padding:'4px'}}
+        onClick={saveDB}>
+          <div>
           <SaveRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px',margin:'1px'}}>保存</p>
+          </div>
         </IconButton>
       </Header>
       

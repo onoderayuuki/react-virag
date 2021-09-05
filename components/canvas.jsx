@@ -565,34 +565,57 @@ export default function Canvas() {
 
       {/* FOOTER */}
       <Toolbar>
-        <IconButton disabled color="primary" onClick={handleOpen}>
-          <FlipToFrontRoundedIcon fontSize="large" />
+        <IconButton disabled color="primary" onClick={handleOpen} style={{padding:'0'}}>
+          <div>
+            <FlipToFrontRoundedIcon fontSize="large" />
+            <p style={{fontSize:'10px'}}>背景</p>
+          </div>
         </IconButton>
         <IconButton
           disabled={historyStep < 1}
           color="primary"
           onClick={handleUndo}
+          style={{padding:'0'}}
         >
+          <div>
           <ArrowBackIosRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px'}}>戻る</p>
+          </div>
         </IconButton>
         <IconButton
           disabled={historyStep >= history.length - 1}
           color="primary"
           onClick={handleRedo}
+          style={{padding:'0'}}
         >
-          <ArrowForwardIosRoundedIcon fontSize="large" />
+          <div>
+            <ArrowForwardIosRoundedIcon fontSize="large" />
+            <p style={{fontSize:'10px'}}>進む</p>
+          </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleCopy}>
+        <IconButton disabled={!selectedId} color="primary" onClick={handleCopy}  style={{padding:'0'}}>
+          <div>
           <QueueRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px'}}>コピー</p>
+          </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleMirror}>
+        <IconButton disabled={!selectedId} color="primary" onClick={handleMirror}  style={{padding:'0'}}>
+          <div>
           <SwapHorizSharpIcon fontSize="large" />
+          <p style={{fontSize:'10px'}}>反転</p>
+          </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleDelete}>
+        <IconButton disabled={!selectedId} color="primary" onClick={handleDelete} style={{padding:'0'}}>
+          <div>
           <DeleteRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px'}}>削除</p>
+          </div>
         </IconButton>
-        <IconButton disabled color="primary" onClick={handleOpen}>
+        <IconButton disabled color="primary" onClick={handleOpen}  style={{padding:'0'}}>
+          <div>
           <LoopRoundedIcon fontSize="large" />
+          <p style={{fontSize:'10px'}}>置き換え</p>
+          </div>
         </IconButton>
       </Toolbar>
       <Fab

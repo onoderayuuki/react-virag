@@ -7,6 +7,7 @@ const useStyles = makeStyles({
   appBar: {
     top: 'auto',
     bottom: 0,
+    fontSize: '8px'
   }
 });
 

@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    height: "80vh",
+    height: "90vh",
   },
   image: {
     paddingLeft: "10px",

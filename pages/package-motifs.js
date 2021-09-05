@@ -9,9 +9,12 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
+// import { TouchBackend } from "react-dnd-touch-backend";
+
+// import { DndProvider } from 'react-dnd-multi-backend'
+// import { HTML5toTouch } from 'rdndmb-html5-to-touch'
 
 import { Dustbin } from "../components/Dustbin";
 import { DndBox } from "../components/DndBox";
@@ -20,6 +23,28 @@ import Header from "../components/header.js";
 
 import { db } from "../components/firebase";
 import { UserContext } from "./_app";
+
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
+
+import { DndProvider, TouchTransition, MouseTransition } from 'react-dnd-multi-backend'
+
+export const HTML5toTouch = {
+  backends: [
+    {
+      id: 'html5',
+      backend: HTML5Backend,
+      transition: MouseTransition,
+    },
+    {
+      id: 'touch',
+      backend: TouchBackend,
+      options: {enableMouseEvents: true},
+      preview: true,
+      transition: TouchTransition,
+    },
+  ],
+}
 
 export default function Package() {
   // const [seriesTitle, setSeriesTitle] = useState("untitle-test");
@@ -184,7 +209,8 @@ export default function Package() {
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
       </Header>
-      <DndProvider backend={TouchBackend}>
+      {/* <DndProvider backend={TouchBackend}> */}
+      <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>
           <Grid item xs={3}>
             <Boxes tag="" />

@@ -151,6 +151,7 @@ export default function Add() {
           height={size["height"]}
           width={size["width"]}
           src={images[0]["data_url"]}
+          image={images[0]}
           tag=""
         />
       )}

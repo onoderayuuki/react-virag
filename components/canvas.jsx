@@ -1,10 +1,10 @@
 // import Image from "next/image";
-import React, { useState, useEffect, useRef ,useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 import NextImage from "next/image";
 import useImage from "use-image";
-import { triggerBase64Download } from 'react-base64-downloader';
+import { triggerBase64Download } from "react-base64-downloader";
 
 import Box from "@material-ui/core/Box";
 import Modal from "@material-ui/core/Modal";
@@ -18,13 +18,13 @@ import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import LoopRoundedIcon from "@material-ui/icons/LoopRounded";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import SaveAltRoundedIcon from "@material-ui/icons/SaveAltRounded";
-import ShareRoundedIcon from '@material-ui/icons/ShareRounded';
+import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
 import Chip from "@material-ui/core/Chip";
 // import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from "@material-ui/icons/Done";
-import ImageList from '@material-ui/core/ImageList';
-import ImageListItem from '@material-ui/core/ImageListItem';
-import SwapHorizSharpIcon from '@material-ui/icons/SwapHorizSharp';
+import ImageList from "@material-ui/core/ImageList";
+import ImageListItem from "@material-ui/core/ImageListItem";
+import SwapHorizSharpIcon from "@material-ui/icons/SwapHorizSharp";
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
 
@@ -35,9 +35,6 @@ import { IconButton } from "@material-ui/core";
 import firebase from "firebase/app";
 import { db } from "./firebase";
 import { UserContext } from "../pages/_app";
-
-
-
 
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {
   const shapeRef = useRef();
@@ -51,7 +48,7 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
     // console.log(trRef.current);
   }, [isSelected]);
 
-  const [img] = useImage(image.src,'Anonymous');
+  const [img] = useImage(image.src, "Anonymous");
   return (
     <>
       <Image
@@ -59,8 +56,8 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
         alt="#"
         x={image.x}
         y={image.y}
-        height={ image.height *72/25.4}
-        width={ image.width *72/25.4}
+        height={(image.height * 72) / 25.4}
+        width={(image.width * 72) / 25.4}
         rotation={image.rotation}
         scaleX={image.scaleX}
         draggable={isSelected}
@@ -84,13 +81,13 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
 };
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'scroll',
-    marginTop:'10px',
-    marginLeft:'10px',
-    height:'45vh'
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "scroll",
+    marginTop: "10px",
+    marginLeft: "10px",
+    height: "45vh",
   },
   imageList: {
     width: 500,
@@ -111,21 +108,59 @@ export default function Canvas() {
 
   //追加用データ
   const [tags, setTags] = useState([
-    {name:"tag0",onoff:true,motifs:[
-      { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "tag0" },
-      { id: "dddd", height: "100", width: "100", src: "/test4.png", tag: "tag0" }]
+    {
+      name: "tag0",
+      onoff: true,
+      motifs: [
+        {
+          id: "cccc",
+          height: "100",
+          width: "100",
+          src: "/test3.png",
+          tag: "tag0",
+        },
+        {
+          id: "dddd",
+          height: "100",
+          width: "100",
+          src: "/test4.png",
+          tag: "tag0",
+        },
+      ],
     },
-    {name:"tag1",onoff:true,motifs:[
-      { id: "a", height: "100", width: "100", src: "/test.png", tag: "tag1" },
-      { id: "b", height: "100", width: "100", src: "/test2.png", tag: "tag1" }
-    ]}, 
-    {name:"tag2",onoff:true,motifs:[
-      { id: "f", height: "100", width: "100", src: "/test.png", tag: "tag2" },
-      { id: "h", height: "100", width: "100", src: "/test2.png", tag: "tag2" }
-    ]}
+    {
+      name: "tag1",
+      onoff: true,
+      motifs: [
+        { id: "a", height: "100", width: "100", src: "/test.png", tag: "tag1" },
+        {
+          id: "b",
+          height: "100",
+          width: "100",
+          src: "/test2.png",
+          tag: "tag1",
+        },
+      ],
+    },
+    {
+      name: "tag2",
+      onoff: true,
+      motifs: [
+        { id: "f", height: "100", width: "100", src: "/test.png", tag: "tag2" },
+        {
+          id: "h",
+          height: "100",
+          width: "100",
+          src: "/test2.png",
+          tag: "tag2",
+        },
+      ],
+    },
   ]);
   const [tagNames, setTagNames] = useState([""]);
-  
+
+  //追加か差し替えか
+  const [addMode, setAddMode] = useState("add");
 
   //キャンバス用データ
   //   const [backImage, setBackImage] = useState({});
@@ -137,8 +172,8 @@ export default function Canvas() {
     x: 0,
     y: 0,
     rotation: 0,
-    height:297,
-    width:210
+    height: 297,
+    width: 210,
   });
 
   // const [images, setImages] = useState([
@@ -147,22 +182,35 @@ export default function Canvas() {
   // ]);
   const [images, setImages] = useState([]);
   //DB取得関連
-  const seriesID = "IC3cHj3Vew9FUuy84BUg";
+  const seriesID = "series1";
   const SeriesRef = db.collection("series").doc(seriesID);
+  // const SeriesRef = db.collection("series");
   const MotifRef = db.collection("motif");
   const [motifs, setMotifs] = useState([]);
   // const [motifs, setMotifs] = useState([
-    //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
-    //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
-    //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
-    //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
-    // ]);
-    
-    useEffect(() => {
-      if(userId){
-        const designRef = db.collection("users").doc(userId).collection("design");
-        if(designId !="new"){
-          designRef.doc(designId)
+  //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
+  //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
+  //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
+  //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
+  // ]);
+
+  //ランダムID生成
+  function getUniqueStr(myStrong) {
+    var strong = 1000;
+    if (myStrong) strong = myStrong;
+
+    return (
+      new Date().getTime().toString(16) +
+      Math.floor(strong * Math.random()).toString(16)
+    );
+  }
+
+  useEffect(() => {
+    if (userId) {
+      const designRef = db.collection("users").doc(userId).collection("design");
+      if (designId != "new") {
+        designRef
+          .doc(designId)
           .get()
           .then((doc) => {
             if (doc.exists) {
@@ -177,49 +225,51 @@ export default function Canvas() {
           .catch((error) => {
             console.log("Error getting document:", error);
           });
-        }
       }
-      SeriesRef.get()
-        .then((doc) => {
-          if (doc.exists) {
-            // console.log("Document data:", doc.data());
-            let newTags =doc.data().tagNames;
-            newTags.push("");
-            // console.log(newTags);
-            setTagNames(newTags);
-          } else {
-            console.log("No such document!");
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-
-      const MotifData = MotifRef.onSnapshot((snapshot) => {
-        setMotifs(
-          snapshot.docs.map((dbData) => ({
-            id: dbData.id,
-            height: dbData.data().height,
-            width: dbData.data().width,
-            src: dbData.data().src,
-            tag: dbData.data().tag,
-          }))
-        );
+    }
+    SeriesRef.get()
+      .then((doc) => {
+        if (doc.exists) {
+          // console.log("Document data:", doc.data());
+          let newTags = doc.data().tagNames;
+          newTags.push("");
+          // console.log(newTags);
+          const newTags2 = newTags.filter(function (tag) {
+            return tag != "背景";
+          });
+          setTagNames(newTags2);
+        } else {
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
       });
 
-      return () => MotifData();
-      
-    }, []);
+    const MotifData = MotifRef.onSnapshot((snapshot) => {
+      setMotifs(
+        snapshot.docs.map((dbData) => ({
+          id: dbData.id,
+          height: dbData.data().height,
+          width: dbData.data().width,
+          src: dbData.data().src,
+          tag: dbData.data().tag,
+        }))
+      );
+    });
 
-   const handleTouch = (e) =>{    
+    return () => MotifData();
+  }, []);
+
+  const handleTouch = (e) => {
     //  console.log(e.target.getStage().scaleX());
-     const stage = e.target.getStage()
-     if(e.evt.touches.length >= 2) {
-       getMultiTouchOnStage(e.evt.touches[0], e.evt.touches[1],stage);
-      }else{
+    const stage = e.target.getStage();
+    if (e.evt.touches.length >= 2) {
+      getMultiTouchOnStage(e.evt.touches[0], e.evt.touches[1], stage);
+    } else {
       checkDeselect(e);
-    }     
-   };
+    }
+  };
   //選択
   const [selectedId, selectShape] = useState(null);
   const checkDeselect = (e) => {
@@ -235,30 +285,11 @@ export default function Canvas() {
   const [history, setHistory] = useState([images]);
   const [historyStep, setHistoryStep] = useState(0);
 
-  function getUniqueStr(myStrong){
-    var strong = 1000;
-    if (myStrong) strong = myStrong;
-    
-    return new Date().getTime().toString(16) + Math.floor(strong*Math.random()).toString(16)
-  }
-
-  const handleAddClick = (motif) => {
-    const x = Math.floor(Math.random() * 100);
-    const y = Math.floor(Math.random() * 5);
-    const randomID = getUniqueStr(10);
-    console.log(motif,randomID);
-    const newImages = [
-      ...images,
-      { id: randomID, src: motif.src, x: x, y: y, rotation: 0,scaleX:1,width:motif.width ,height:motif.height },
-    ];
-    updateImages(newImages);
-  };
-
-  const updateImages=(newImages)=>{
+  const updateImages = (newImages) => {
     setImages(newImages);
     setHistory([...history, newImages]);
     setHistoryStep(historyStep + 1);
-  }
+  };
   const handleUndo = () => {
     setHistoryStep(historyStep - 1);
     setImages(history[historyStep]);
@@ -271,18 +302,18 @@ export default function Canvas() {
   //追加エリア
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => {
+  const handleOpen = (mode, tagArray) => {
+    setAddMode(mode);
     let array = [];
-    tagNames.map((tagName)=>{
-        const thisMotifs =  motifs.filter(function(motif) {
-            return motif.tag == tagName;
-        })
-        array.push({name: tagName,onoff: true,motifs:thisMotifs});
-    })
+    tagArray.map((tagName) => {
+      const thisMotifs = motifs.filter(function (motif) {
+        return motif.tag == tagName;
+      });
+      array.push({ name: tagName, onoff: true, motifs: thisMotifs });
+    });
     setTags(array);
     console.log(array);
-
-    setOpen(true)
+    setOpen(true);
   };
 
   const handleClose = () => setOpen(false);
@@ -299,41 +330,90 @@ export default function Canvas() {
     p: 4,
   };
 
+  //追加エリア内のモチーフクリック
+  const handleMotifClick = (motif) => {
+    if (addMode == "add") {
+      const x = Math.floor(Math.random() * 100);
+      const y = Math.floor(Math.random() * 5);
+      const randomID = getUniqueStr(10);
+      // console.log(motif,randomID);
+      const newImages = [
+        ...images,
+        {
+          id: randomID,
+          src: motif.src,
+          x: x,
+          y: y,
+          rotation: 0,
+          scaleX: 1,
+          width: motif.width,
+          height: motif.height,
+          tag: motif.tag,
+        },
+      ];
+      updateImages(newImages);
+    } else if (addMode == "change") {
+      const newOne = images.find((image) => image.id == selectedId);
+      const otherImages = images.filter(function (image) {
+        return image.id != selectedId;
+      });
+      const newImages = [
+        ...otherImages,
+        { ...newOne, src: motif.src, width: motif.width, height: motif.height },
+      ];
+      // console.log(newImages);
+      updateImages(newImages);
+    }
+  };
+
   //削除
   //lengthで生成しているIDがダブってしまうのでは？？？
-  const handleDelete = () =>{
-    const newImages =  images.filter(function(image) {
-        return image.id != selectedId;
-    })
+  const handleDelete = () => {
+    const newImages = images.filter(function (image) {
+      return image.id != selectedId;
+    });
     updateImages(newImages);
     selectShape(null);
-  }
+  };
 
   //コピー
-  const handleCopy = () =>{
-    const newOne = images.find(image => image.id == selectedId)
+  const handleCopy = () => {
+    const newOne = images.find((image) => image.id == selectedId);
+    const randomID = getUniqueStr(10);
     const newImages = [
       ...images,
-      { ...newOne, id: images.length, x: newOne.x+10, y: newOne.y+10, rotation: newOne.rotation ,scaleX:newOne.scaleX},
+      {
+        ...newOne,
+        id: randomID,
+        x: newOne.x + 10,
+        y: newOne.y + 10,
+        rotation: newOne.rotation,
+        scaleX: newOne.scaleX,
+      },
     ];
     // console.log(newImages);
     updateImages(newImages);
-  }
+  };
 
   //反転
-  const handleMirror = () =>{
-    const selectImage = images.find(image => image.id == selectedId);
+  const handleMirror = () => {
+    const selectImage = images.find((image) => image.id == selectedId);
     const nowScaleX = selectImage.scaleX;
-    const otherImages =  images.filter(function(image) {
+    const otherImages = images.filter(function (image) {
       return image.id != selectedId;
-    })
-    const newImages = [
-      ...otherImages,
-      { ...selectImage,scaleX: -nowScaleX},
-    ];
-    console.log({ ...selectImage, x:selectImage.x+300*nowScaleX ,scaleX: -nowScaleX});
+    });
+    const newImages = [...otherImages, { ...selectImage, scaleX: -nowScaleX }];
+    // console.log({ ...selectImage, x:selectImage.x+300*nowScaleX ,scaleX: -nowScaleX});
     updateImages(newImages);
-  }
+  };
+
+  //入れ替え
+  const handleChange = () => {
+    console.log("change");
+    const selectImage = images.find((image) => image.id == selectedId);
+    console.log(selectImage.tag);
+    handleOpen("change", [selectImage.tag]);
+  };
 
   //ダウンロードと保存
   // const base64 =
@@ -347,62 +427,69 @@ export default function Canvas() {
   };
 
   const saveDB = () => {
-    const scale = 200/(backImage.height*72/25.4);
-    console.log("save: ", designId,);
-    console.log(scale,backImage.height*72/25.4,(backImage.height*72/25.4)*scale);
+    const scale = 200 / ((backImage.height * 72) / 25.4);
+    console.log("save: ", designId);
+    console.log(
+      scale,
+      (backImage.height * 72) / 25.4,
+      ((backImage.height * 72) / 25.4) * scale
+    );
     const designRef = db.collection("users").doc(userId).collection("design");
-    if(designId =="new"){
-      designRef.add({
-        backImage: backImage,
-        images: images,
-        base64: stageRef.current.toDataURL({ pixelRatio: scale }),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .then((docRef) => {
+    if (designId == "new") {
+      designRef
+        .add({
+          backImage: backImage,
+          images: images,
+          base64: stageRef.current.toDataURL({ pixelRatio: scale }),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
-      })
-      .catch((error) => {
+        })
+        .catch((error) => {
           console.error("Error adding document: ", error);
-      });
-    }else{
-      designRef.doc(designId).set({
-        backImage: backImage,
-        images: images,
-        base64: stageRef.current.toDataURL({ pixelRatio: scale }),
-        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      })
-      .then(() => {
-        console.log("Document successfully written!");
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-      });
-  }
+        });
+    } else {
+      designRef
+        .doc(designId)
+        .set({
+          backImage: backImage,
+          images: images,
+          base64: stageRef.current.toDataURL({ pixelRatio: scale }),
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        })
+        .then(() => {
+          console.log("Document successfully written!");
+        })
+        .catch((error) => {
+          console.error("Error writing document: ", error);
+        });
+    }
   };
 
-  const handleTagClick=(i) =>{
+  const handleTagClick = (i) => {
     const newTags = tags.slice();
-    newTags[i]['onoff']=!tags[i]['onoff']
+    newTags[i]["onoff"] = !tags[i]["onoff"];
     setTags(newTags);
     // console.log(i);
     // console.log(tags[i]['onoff']);
   };
 
   //ページの拡大縮小
-  const getCenter=(p1, p2) =>{
+  const getCenter = (p1, p2) => {
     return {
       x: (p1.x + p2.x) / 2,
       y: (p1.y + p2.y) / 2,
     };
   };
-  const getDistance=(p1, p2) => {
+  const getDistance = (p1, p2) => {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
   };
-  const [lastDist,setLastDist] =useState(null);
-  const [lastCenter,setLastCenter] =useState(null);
+  const [lastDist, setLastDist] = useState(null);
+  const [lastCenter, setLastCenter] = useState(null);
 
-  const getMultiTouchOnStage = (touch1, touch2 , stage) => {
-    if (touch1 && touch2 ) {
+  const getMultiTouchOnStage = (touch1, touch2, stage) => {
+    if (touch1 && touch2) {
       // if the stage was under Konva's drag&drop
       // we need to stop it, and implement our own pan logic with two pointers
       const P1 = {
@@ -419,71 +506,68 @@ export default function Canvas() {
       const newCenter = getCenter(P1, P2);
       const dist = getDistance(P1, P2);
 
-      const ratio = lastDist ? (dist / lastDist) :1 ;
-      const scale = stage.scaleX() * ratio ;
-      console.log(dist,lastDist)
-      console.log(stage.scaleX(),ratio)
+      const ratio = lastDist ? dist / lastDist : 1;
+      const scale = stage.scaleX() * ratio;
+      console.log(dist, lastDist);
+      console.log(stage.scaleX(), ratio);
       // console.log(ratio,scale)
-      
+
       // local coordinates of center point
       const pointTo = {
         x: (newCenter.x - stage.x()) / stage.scaleX(),
         y: (newCenter.y - stage.y()) / stage.scaleY(),
       };
       // // calculate new position of the stage
-      const dx = lastCenter ? (newCenter.x - lastCenter.x) : 0;
-      const dy = lastCenter ? (newCenter.y - lastCenter.y) : 0;
-      
+      const dx = lastCenter ? newCenter.x - lastCenter.x : 0;
+      const dy = lastCenter ? newCenter.y - lastCenter.y : 0;
+
       const newPos = {
         x: newCenter.x - pointTo.x * scale + dx,
         y: newCenter.y - pointTo.y * scale + dy,
       };
 
-      console.log(stage.position(),stage.x(),stage.y());
-      if(scale>0.1){
+      console.log(stage.position(), stage.x(), stage.y());
+      if (scale > 0.1) {
         stage.scaleX(scale);
         stage.scaleY(scale);
-        stage.position(newPos); 
+        stage.position(newPos);
         setLastDist(dist);
         setLastCenter(newCenter);
       }
-
     }
-  }
-  const handleTouchEnd = () =>{
+  };
+  const handleTouchEnd = () => {
     setLastDist(null);
     setLastCenter(null);
-  }
+  };
 
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
-        <IconButton color="primary" 
-        style={{padding:'4px'}}
-         onClick={downloadImage}>
-           <div>
-          <SaveAltRoundedIcon fontSize="large" />
-          <p style={{fontSize:'9px',margin:'1px'}}>ダウンロード</p>
-          </div>
-        </IconButton>
-        <IconButton color="primary" 
-        style={{padding:'4px'}}
+        <IconButton
+          color="primary"
+          style={{ padding: "4px" }}
+          onClick={downloadImage}
         >
           <div>
-          <ShareRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px',margin:'1px'}}>共有</p>
+            <SaveAltRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "9px", margin: "1px" }}>ダウンロード</p>
           </div>
         </IconButton>
-        <IconButton color="primary" 
-        style={{padding:'4px'}}
-        onClick={saveDB}>
+        <IconButton disabled color="primary" style={{ padding: "4px" }}>
           <div>
-          <SaveRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px',margin:'1px'}}>保存</p>
+            <ShareRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
+          </div>
+        </IconButton>
+        <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
+          <div>
+            <SaveRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px", margin: "1px" }}>保存</p>
           </div>
         </IconButton>
       </Header>
-      
+
       {/* モーダル */}
       <Modal
         open={open}
@@ -493,43 +577,46 @@ export default function Canvas() {
       >
         <Box sx={style}>
           <Box>
-            {tags.map((tag,i) => {
-              return(
+            {tags.map((tag, i) => {
+              return (
                 <Chip
-                key = {i}
-                label={tag.name}
-                clickable
-                color={tag.onoff ? "primary":"default" }
-                style={{ marginLeft:'4px' }}
-                onClick={() => handleTagClick(i)}
-              />
+                  key={i}
+                  label={tag.name}
+                  clickable
+                  color={tag.onoff ? "primary" : "default"}
+                  style={{ marginLeft: "4px" }}
+                  onClick={() => handleTagClick(i)}
+                />
               );
             })}
           </Box>
           <div className={classes.root}>
-          <ImageList className={classes.imageList} rowHeight={100} cols={2}>
-          {tags.map((tag) => (
-            tag.motifs.map((motif,i) => (
-              tag.onoff && (<ImageListItem 
-                key={i} 
-                // cols={motif.cols || 1}
-              >
-                {motif.src != "" && (
-                  <NextImage
-                  key={i}
-                  src={motif.src}
-                  height={100}
-                  width={100}
-                  onClick={(e) => {
-                    handleAddClick(motif);
-                  }}
-                />
-                  )}
-                </ImageListItem>)
-              ))
-            ))}
-        </ImageList>
-        </div>
+            <ImageList className={classes.imageList} rowHeight={100} cols={2}>
+              {tags.map((tag) =>
+                tag.motifs.map(
+                  (motif, i) =>
+                    tag.onoff && (
+                      <ImageListItem
+                        key={i}
+                        // cols={motif.cols || 1}
+                      >
+                        {motif.src != "" && (
+                          <NextImage
+                            key={i}
+                            src={motif.src}
+                            height={100}
+                            width={100}
+                            onClick={(e) => {
+                              handleMotifClick(motif);
+                            }}
+                          />
+                        )}
+                      </ImageListItem>
+                    )
+                )
+              )}
+            </ImageList>
+          </div>
         </Box>
       </Modal>
 
@@ -537,14 +624,14 @@ export default function Canvas() {
       <Stage
         ref={stageRef}
         width={window.innerWidth * 0.95}
-        height={window.innerHeight * 0.85}
+        height={window.innerHeight * 0.8}
         x={0}
         y={0}
         scaleX={1}
         scaleY={1}
         // onMouseDown={checkDeselect}
-        onTouchMove = {handleTouch}
-        onTouchEnd = {handleTouchEnd}
+        onTouchMove={handleTouch}
+        onTouchEnd={handleTouchEnd}
       >
         <Layer>
           <URLImage
@@ -583,64 +670,88 @@ export default function Canvas() {
 
       {/* FOOTER */}
       <Toolbar>
-        <IconButton disabled color="primary" onClick={handleOpen} style={{padding:'0'}}>
+        <IconButton
+          color="primary"
+          onClick={() => handleOpen("change", ["背景"])}
+          style={{ padding: "0" }}
+        >
           <div>
             <FlipToFrontRoundedIcon fontSize="large" />
-            <p style={{fontSize:'10px'}}>背景</p>
+            <p style={{ fontSize: "10px" }}>背景</p>
           </div>
         </IconButton>
         <IconButton
           disabled={historyStep < 1}
           color="primary"
           onClick={handleUndo}
-          style={{padding:'0'}}
+          style={{ padding: "0" }}
         >
           <div>
-          <ArrowBackIosRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px'}}>戻る</p>
+            <ArrowBackIosRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px" }}>戻る</p>
           </div>
         </IconButton>
         <IconButton
           disabled={historyStep >= history.length - 1}
           color="primary"
           onClick={handleRedo}
-          style={{padding:'0'}}
+          style={{ padding: "0" }}
         >
           <div>
             <ArrowForwardIosRoundedIcon fontSize="large" />
-            <p style={{fontSize:'10px'}}>進む</p>
+            <p style={{ fontSize: "10px" }}>進む</p>
           </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleCopy}  style={{padding:'0'}}>
+        <IconButton
+          disabled={!selectedId}
+          color="primary"
+          onClick={handleCopy}
+          style={{ paddingTop: "5px" }}
+        >
           <div>
-          <QueueRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px'}}>コピー</p>
+            <QueueRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px" }}>コピー</p>
           </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleMirror}  style={{padding:'0'}}>
+        <IconButton
+          disabled={!selectedId}
+          color="primary"
+          onClick={handleMirror}
+          style={{ padding: "0" }}
+        >
           <div>
-          <SwapHorizSharpIcon fontSize="large" />
-          <p style={{fontSize:'10px'}}>反転</p>
+            <SwapHorizSharpIcon fontSize="large" />
+            <p style={{ fontSize: "10px" }}>反転</p>
           </div>
         </IconButton>
-        <IconButton disabled={!selectedId} color="primary" onClick={handleDelete} style={{padding:'0'}}>
+        <IconButton
+          disabled={!selectedId}
+          color="primary"
+          onClick={handleDelete}
+          style={{ padding: "0" }}
+        >
           <div>
-          <DeleteRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px'}}>削除</p>
+            <DeleteRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px" }}>削除</p>
           </div>
         </IconButton>
-        <IconButton disabled color="primary" onClick={handleOpen}  style={{padding:'0'}}>
+        <IconButton
+          disabled={!selectedId}
+          color="primary"
+          onClick={handleChange}
+          style={{ padding: "0" }}
+        >
           <div>
-          <LoopRoundedIcon fontSize="large" />
-          <p style={{fontSize:'10px'}}>置き換え</p>
+            <LoopRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px" }}>置き換え</p>
           </div>
         </IconButton>
       </Toolbar>
       <Fab
         color="primary"
         aria-label="add"
-        style={{ bottom: "115px", left: "300px" }}
-        onClick={handleOpen}
+        style={{ bottom: "130px", left: "300px" }}
+        onClick={() => handleOpen("add", tagNames)}
       >
         <AddIcon />
       </Fab>

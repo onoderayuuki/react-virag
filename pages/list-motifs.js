@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     position: 'relative',
     paddingBottom: '50px',
     boxSizing: 'border-box',
-    height: '80vh',
+    height: '90vh',
     /* display: flex, */
   },
   select :{
@@ -158,6 +158,7 @@ export default function ListMotifs() {
           height={motifs[selectMotifId]['height']} 
           width={motifs[selectMotifId]['width']} 
           src={motifs[selectMotifId]['src']}
+          image=""
         />
       }
     </>

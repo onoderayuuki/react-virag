@@ -1,6 +1,7 @@
 import React, { useState, useEffect ,useContext} from "react";
 import Image from "next/image";
 // import style from "../styles/resize.module.css";
+import firebase from "firebase/app";
 import { db, storage } from "../components/firebase";
 import { UserContext } from "./_app.js";
 
@@ -60,63 +61,69 @@ export default function ResizeMotif(props) {
     width: props.width,
     src: props.src,
   });
-
-  //firebaseStrageに画像登録してパスをfirestoreに保存したい、本当は。
-  // const handleUpload = async (accepterdImg: any) => {
-  //   try {
-  //     const uploadTask: any = storage
-  //       // .ref(`/images/${myFiles[0].name}`)
-  //       .ref(`/images/stragetest.png`)
-  //       .put(myFiles[0]);
-
-  //     uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, next, error);
-  //   } catch (error) {
-  //     console.log("エラーキャッチ", error);
-  //   }
-  // };
+  // console.log(props.image.file);
 
   //firebaseに保存
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
-
+  const createRandom =()=>{
+    const S ="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; //ランダムな文字列を作るための候補、62文字
+    const N = 16; //16文字の文字列を作るという意味　生成したい文字数が１６の文字列になる
+    const randomMoji = Array.from(crypto.getRandomValues(new Uint32Array(N))) //乱数を生成してくれるもので0からランダムな数字が１６こ選ばれる
+            .map((n) => S[n % S.length]).join("");
+    return randomMoji ;
+  }
+  const metadata = {
+    contentType: 'image/jpeg',
+  };
   const saveDB = () => {
     if (userId) {
       const MotifRef = db.collection("users").doc(userId).collection("motif");
-      if (motif.id == "") {
-        //追加
-        console.log("add");
-        MotifRef.add({
+      console.log(props.id);
+      if (!props.id) {
+        const fileName = createRandom()+'_'+props.image.file.name;
+        // firebase storageに登録する処理
+        const uploadTweetImg = storage.ref(fileName).put(props.image.file,metadata);
+        
+        // firebaseのDBに登録する処理
+        uploadTweetImg.on(
+          firebase.storage.TaskEvent.STATE_CHANGED,
+          () => {}, //進捗度合いの管理するもの、
+          (err) => { console.log(err.message);},
+          async () => {
+            //成功したとき
+            await storage
+              .ref(fileName)
+              .getDownloadURL()
+              .then(async (url) => {
+                await MotifRef.add({
+                      height: motif.height,
+                      width: motif.width,
+                      src: url,
+                      tag: "",
+                    })
+                      .then((docRef) => {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch((error) => {
+                      console.error("Error adding document: ", error);
+                    });
+              });
+          }
+        );
+      }else{
+        MotifRef.doc(props.id).set({
           height: motif.height,
           width: motif.width,
           src: props.src,
-          tag: "",
+          tag: props.tag,
         })
           .then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
-            window.location.href = "./home";
-          })
-          .catch((error) => {
-            console.error("Error adding document: ", error);
-          });
-      } else {
-        //変更
-        console.log("set");
-        const docRef = MotifRef.doc(motif.id);
-        console.log(docRef);
-        docRef
-          .set({
-            height: motif.height,
-            width: motif.width,
-            src: props.src,
-            tag: props.tag,
-          })
-          .then(() => {
-            console.log("Document successfully written!");
-            window.location.href = "./home";
-          })
-          .catch((error) => {
-            console.error("Error writing document: ", error);
-          });
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
       }
       // window.location.href='./home'
     }

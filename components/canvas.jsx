@@ -99,7 +99,6 @@ export default function Canvas() {
   //ID取得
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
-
   const router = useRouter();
   const {
     query: { designId },
@@ -159,9 +158,6 @@ export default function Canvas() {
   ]);
   const [tagNames, setTagNames] = useState([""]);
 
-  //追加か差し替えか
-  const [addMode, setAddMode] = useState("add");
-
   //キャンバス用データ
   //   const [backImage, setBackImage] = useState({});
   //   const [images, setImages] = useState([]);
@@ -194,7 +190,7 @@ export default function Canvas() {
   //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
   // ]);
 
-  //ランダムID生成
+  //ランダムID生成関数
   function getUniqueStr(myStrong) {
     var strong = 1000;
     if (myStrong) strong = myStrong;
@@ -205,6 +201,7 @@ export default function Canvas() {
     );
   }
 
+  //データ取得
   useEffect(() => {
     if (userId) {
       const designRef = db.collection("users").doc(userId).collection("design");
@@ -223,7 +220,7 @@ export default function Canvas() {
             }
           })
           .catch((error) => {
-            console.log("Error getting document:", error);
+            console.log("Error getting design:", error);
           });
       }
     }
@@ -243,10 +240,14 @@ export default function Canvas() {
         }
       })
       .catch((error) => {
-        console.log("Error getting document:", error);
+        console.log("Error getting series:", error);
       });
 
-    const MotifData = MotifRef.onSnapshot((snapshot) => {
+    MotifRef.get().then((snapshot) => {
+      // querySnapshot.forEach((doc) => {
+      //     // doc.data() is never undefined for query doc snapshots
+      //     console.log(doc.id, " => ", doc.data());
+      // });
       setMotifs(
         snapshot.docs.map((dbData) => ({
           id: dbData.id,
@@ -256,9 +257,11 @@ export default function Canvas() {
           tag: dbData.data().tag,
         }))
       );
+      
+    }).catch((error) => {
+      console.log("Error getting motifs: ", error);
     });
 
-    return () => MotifData();
   }, []);
 
   const handleTouch = (e) => {
@@ -302,6 +305,7 @@ export default function Canvas() {
   //追加エリア
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [addMode, setAddMode] = useState("change");
   const handleOpen = (mode, tagArray) => {
     setAddMode(mode);
     let array = [];

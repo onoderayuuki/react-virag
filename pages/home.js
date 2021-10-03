@@ -10,6 +10,7 @@ import ListRoundedIcon from "@material-ui/icons/ListRounded";
 import PhotoAlbumRoundedIcon from "@material-ui/icons/PhotoAlbumRounded";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import Button from "@material-ui/core/Button";
+import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
 
 import Box from "@material-ui/core/Box";
 import ImageList from "@material-ui/core/ImageList";
@@ -145,7 +146,7 @@ export default function Home() {
     <>
       <Header>
         <Button color="inherit">
-          <Link href={"/login"}>Login</Link>
+          <Link href={"/login"}><AccountCircleRoundedIcon/></Link>
         </Button>
       </Header>
 

@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme)=>({
 }));
 
 export default function footer({ children }) {
-  const classes = useStyles();
     return (
       <Box position="fixed" className={classes.appBar}>
         <Toolbar position="fixed" className={classes.appBar} variant="dense"style={{justifyContent:'center'}}>

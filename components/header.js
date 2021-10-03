@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function header({children}) {
-  const classes = useStyles();
   return (
     <AppBar position="static" color="secondary">
       <Toolbar variant="dense">

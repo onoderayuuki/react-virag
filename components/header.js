@@ -10,28 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 // import MenuIcon from '@material-ui/icons/Menu';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-}));
-
 export default function header({children}) {
   return (
     <AppBar position="static" color="secondary">
       <Toolbar variant="dense">
         <IconButton
           edge="start"
-          className={classes.menuButton}
           color="inherit"
           aria-label="menu"
         >
@@ -39,11 +23,11 @@ export default function header({children}) {
             <HomeRoundedIcon  fontSize="large" />
           </Link>
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
+        <Typography variant="h6" style={{flexGrow:1}}>
           Virag
         </Typography>
         {/* <Link href={"/dbtest"}>TEST</Link> */}
-        <div className={classes.grow} />
+        <div className={{flexGrow:1}} />
         {children}
         {/* <Button color="inherit">
           <Link href={"/login"}>Login</Link>

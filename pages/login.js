@@ -35,9 +35,12 @@ export default function Login(props) {
     <>
     <Header/>
     <Grid>
+    {account &&
       <Typography>
-        {account &&<p> { account } としてログインしています。</p>}
+        <p> { account } としてログインしています。</p>
+        <Link href="/"> HOME へ</Link>
       </Typography>
+      }
       <Paper elevation={3} style={paperStyle}>
         <Grid align="center">
           <Avatar>
@@ -74,7 +77,7 @@ export default function Login(props) {
                     // 作成時 firebaseに[signInWithEmailAndPassword]というものがあるのでそれに
                     // email, passwordで保持した状態を送り→成功すればhistoryによって画面遷移が実行される
                     await auth.signInWithEmailAndPassword(email, password);
-                    props.history.push("/");
+                    // props.history.push("/");
                   } catch (error) {
                     alert(error.message);
                   }
@@ -92,7 +95,7 @@ export default function Login(props) {
                       console.log("匿名アカウントの永続化でエラー", error);
                     });
                   await auth.signInWithEmailAndPassword(email, password);
-                  props.history.push("/");
+                  // props.history.push("/");
                 } catch (error) {
                   alert(error.message);
                 }

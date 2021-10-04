@@ -125,7 +125,7 @@ export default function ResizeMotif(props) {
           console.error("Error adding document: ", error);
         });
       }
-      // window.location.href='./home'
+      window.location.href='./home'
     }
   };
   //数字変更に連動して高さを変える

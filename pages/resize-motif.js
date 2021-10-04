@@ -104,6 +104,8 @@ export default function ResizeMotif(props) {
                     })
                       .then((docRef) => {
                         console.log("Document written with ID: ", docRef.id);
+                        window.location.href='/'
+
                     })
                     .catch((error) => {
                       console.error("Error adding document: ", error);
@@ -120,12 +122,13 @@ export default function ResizeMotif(props) {
         })
           .then((docRef) => {
             console.log("Document written with ID: ", docRef.id);
+            window.location.href='/'
+
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
       }
-      window.location.href='./home'
     }
   };
   //数字変更に連動して高さを変える

@@ -58,6 +58,7 @@ export default function Package() {
   const [seriesTitle, setSeriesTitle] = useState("シリーズ名");
   const [tagNames, setTagNames] = useState(["背景","タグ名"]);
   const [motifs, setMotifs] = useState([]);
+  // const [seriesID, setSeriesID] = useState();
 
     // const userId = "ZZeI9mOadD7wxmT26dqB";
     const userId = useContext(UserContext);
@@ -67,7 +68,11 @@ export default function Package() {
     if(userId){
       const MotifRef = db.collection("users").doc(userId).collection("motif");
       const SeriesRef = db.collection("users").doc(userId).collection("series");
-      const seriesID = "series1";
+      const seriesID = userId;
+      // setSeriesID(userId);
+
+      console.log('seriesID:',seriesID);
+
       SeriesRef.doc(seriesID).get()
       .then((doc) => {
         if (doc.exists) {
@@ -113,7 +118,9 @@ export default function Package() {
     console.log("save: ");
     
     const SeriesRef = db.collection("users").doc(userId).collection("series");
-    const seriesID = "series1";
+    // const seriesID = "series1";
+    const seriesID = userId;
+
     SeriesRef.doc(seriesID).set({
       title: seriesTitle,
       tagNames: tagNames,

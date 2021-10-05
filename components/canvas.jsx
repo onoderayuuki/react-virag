@@ -178,9 +178,9 @@ export default function Canvas() {
   // ]);
   const [images, setImages] = useState([]);
   //DB取得関連
-  const seriesID = "series1";
+  const seriesID = "e6sk0UkXAxNpLeRlJlFpWzZJNMA3";
   const SeriesRef = db.collection("series").doc(seriesID);
-  // const SeriesRef = db.collection("series");
+  
   const MotifRef = db.collection("motif");
   const [motifs, setMotifs] = useState([]);
   // const [motifs, setMotifs] = useState([
@@ -234,7 +234,20 @@ export default function Canvas() {
           const newTags2 = newTags.filter(function (tag) {
             return tag != "背景";
           });
-          setTagNames(newTags2);
+          // setTagNames(newTags2);
+          const SeriesRef2 = db.collection("series").doc(userId);
+          SeriesRef2.get()
+          .then((doc) => {
+            if (doc.exists) {
+              const newTags3 = doc.data().tagNames;
+              setTagNames([...newTags2,newTags3]);
+            } else {
+              console.log("No such document!");
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting series:", error);
+          });
         } else {
           console.log("No such document!");
         }
@@ -242,6 +255,8 @@ export default function Canvas() {
       .catch((error) => {
         console.log("Error getting series:", error);
       });
+
+      
 
     MotifRef.get().then((snapshot) => {
       // querySnapshot.forEach((doc) => {

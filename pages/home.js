@@ -86,6 +86,7 @@ export default function Home() {
         .collection("users")
         .doc(userId)
         .collection("design")
+        .orderBy("timestamp", "desc")
         .onSnapshot((snapshot) => {
           console.log("snapshot.docs:", snapshot.docs);
           if (snapshot.docs) {

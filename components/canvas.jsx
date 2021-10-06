@@ -24,6 +24,7 @@ import Chip from "@material-ui/core/Chip";
 import DoneIcon from "@material-ui/icons/Done";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
+import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import SwapHorizSharpIcon from "@material-ui/icons/SwapHorizSharp";
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
@@ -92,6 +93,14 @@ const useStyles = makeStyles((theme) => ({
   imageList: {
     width: 500,
     height: 450,
+  },
+  subtitle: {
+    textAlign:'right',
+  },
+  titleBar: {
+    height:"20%",
+    background:
+      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
   },
 }));
 
@@ -632,23 +641,28 @@ export default function Canvas() {
               {tags.map((tag) =>
                 tag.motifs.map(
                   (motif, i) =>
-                    tag.onoff && (
-                      <ImageListItem
-                        key={i}
-                        // cols={motif.cols || 1}
-                      >
-                        {motif.src != "" && (
+                    tag.onoff && motif.src != "" &&(
+                          <ImageListItem
+                            key={i}
+                          >
                           <NextImage
                             key={i}
                             src={motif.src}
+                            alt={"image"}
                             height={100}
                             width={100}
                             onClick={(e) => {
                               handleMotifClick(motif);
                             }}
                           />
-                        )}
-                      </ImageListItem>
+                          <ImageListItemBar
+                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)}
+                              classes={{
+                                root: classes.titleBar,
+                                subtitle: classes.subtitle,
+                              }}
+                            />
+                        </ImageListItem>
                     )
                 )
               )}

@@ -28,7 +28,9 @@ async function copyToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.Docu
   const motif = snapshot.data() as RootMotif;
 
   motif.authorRef = firestore.collection('users').doc(userId);
-  await firestore.collection('motif').doc(motifId).set(motif, { merge: true });
+  if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
+    await firestore.collection('motif').doc(motifId).set(motif, { merge: true });
+  }
 
 }
 
@@ -56,7 +58,10 @@ async function copyToRootWithUsersSeriesSnapshot(snapshot: FirebaseFirestore.Doc
   const series = snapshot.data() as RootSeries;
 
   series.authorRef = firestore.collection('users').doc(userId);
-  await firestore.collection('series').doc(seriesId).set(series, { merge: true });
+  if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
+    await firestore.collection('series').doc(seriesId).set(series, { merge: true });
+  }
+
 }
 
 //デザイン
@@ -94,5 +99,7 @@ async function copyToRootWithUsersDesignSnapshot(snapshot: FirebaseFirestore.Doc
   const design = snapshot.data() as RootDesign;
 
   design.authorRef = firestore.collection('users').doc(userId);
-  await firestore.collection('design').doc(designId).set(design, { merge: true });
+  if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
+    await firestore.collection('design').doc(designId).set(design, { merge: true });
+  }
 }

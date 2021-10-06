@@ -83,9 +83,10 @@ export default function ListMotifs() {
     console.log(selectMotifId);
   };
   
-  const deleteMotif =(id)=>{
+  const deleteMotif = (id)=>{
+    const MotifRef = db.collection("users").doc(userId).collection("motif");
     MotifRef.doc(id).delete().then(() => {
-      console.log("firestore:Document successfully deleted!");
+      console.log("firestore:Document successfully deleted!",id);
   }).catch((error) => {
       console.error("firestore:Error removing document: ", error);
   });

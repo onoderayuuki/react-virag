@@ -23,9 +23,7 @@ export default function header({children}) {
             <HomeRoundedIcon  fontSize="large" />
           </Link>
         </IconButton>
-        <Typography variant="h6" style={{flexGrow:1}}>
-          Virag
-        </Typography>
+        
         {/* <Link href={"/dbtest"}>TEST</Link> */}
         <div className={{flexGrow:1}} />
         {children}

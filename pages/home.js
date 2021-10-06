@@ -146,6 +146,9 @@ export default function Home() {
   return (
     <>
       <Header>
+        <Typography variant="h6" style={{flexGrow:1}}>
+          Virag
+        </Typography>
         <Button color="inherit">
           <Link href={"/login"}><AccountCircleRoundedIcon/></Link>
         </Button>

@@ -26,6 +26,9 @@ import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import SwapHorizSharpIcon from "@material-ui/icons/SwapHorizSharp";
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from "@material-ui/core/Typography";
 
 import { Stage, Layer, Image, Transformer } from "react-konva";
 
@@ -169,8 +172,6 @@ export default function Canvas() {
   const [tagNames, setTagNames] = useState([""]);
 
   //キャンバス用データ
-  //   const [backImage, setBackImage] = useState({});
-  //   const [images, setImages] = useState([]);
 
   const [backImage, setBackImage] = useState({
     src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
@@ -470,6 +471,9 @@ export default function Canvas() {
     console.log(downloadImage);
     triggerBase64Download(dataURL, saveId);
   };
+    //保存メッセージ
+    const [saved, setSaved] = useState(false);
+    
 
   const saveDB = () => {
     const scale = 200 / ((backImage.height * 72) / 25.4);
@@ -491,6 +495,7 @@ export default function Canvas() {
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
           setSaveId(docRef.id);
+          setSaved(true);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
@@ -506,11 +511,13 @@ export default function Canvas() {
         })
         .then(() => {
           console.log("Document successfully written!",saveId);
+          setSaved(true);
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
         });
     }
+    
   };
 
   const handleTagClick = (i) => {
@@ -590,6 +597,9 @@ export default function Canvas() {
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
+        <Typography variant="p" style={{flexGrow:1}}>
+          {backImage.height} x {backImage.width} mm
+        </Typography>
         <IconButton
           color="primary"
           style={{ padding: "4px" }}
@@ -613,7 +623,23 @@ export default function Canvas() {
           </div>
         </IconButton>
       </Header>
-
+      <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
+          open={saved}
+          autoHideDuration={6000}
+          onClose={()=>{setSaved(false)}}
+          message="保存しました"
+          action={
+            <>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={()=>{setSaved(false)}}>
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </>
+        }
+      />
       {/* モーダル */}
       <Modal
         open={open}

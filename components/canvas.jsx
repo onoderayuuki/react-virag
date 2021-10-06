@@ -100,7 +100,7 @@ export default function Canvas() {
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
   const router = useRouter();
-  
+  const [saveId,setSaveId]=useState();
   const {
     query: { designId },
   } = router;
@@ -205,6 +205,7 @@ export default function Canvas() {
 
   //データ取得
   useEffect(() => {
+    setSaveId(designId);
     if (userId) {
       const designRef = db.collection("users").doc(userId).collection("design");
       if (designId != "new") {
@@ -218,7 +219,7 @@ export default function Canvas() {
               setBackImage(doc.data().backImage);
             } else {
               // doc.data() will be undefined in this case
-              console.log("No such document!");
+              console.log("No such document!",designId);
             }
           })
           .catch((error) => {
@@ -458,19 +459,19 @@ export default function Canvas() {
   const downloadImage = () => {
     const dataURL = stageRef.current.toDataURL();
     console.log(downloadImage);
-    triggerBase64Download(dataURL, designId);
+    triggerBase64Download(dataURL, saveId);
   };
 
   const saveDB = () => {
     const scale = 200 / ((backImage.height * 72) / 25.4);
-    console.log("save: ", designId);
+    console.log("save: ", saveId);
     console.log(
       scale,
       (backImage.height * 72) / 25.4,
       ((backImage.height * 72) / 25.4) * scale
     );
     const designRef = db.collection("users").doc(userId).collection("design");
-    if (designId == "new") {
+    if (saveId == "new") {
       designRef
         .add({
           backImage: backImage,
@@ -480,13 +481,14 @@ export default function Canvas() {
         })
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
+          setSaveId(docRef.id);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
     } else {
       designRef
-        .doc(designId)
+        .doc(saveId)
         .set({
           backImage: backImage,
           images: images,
@@ -494,7 +496,7 @@ export default function Canvas() {
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(() => {
-          console.log("Document successfully written!");
+          console.log("Document successfully written!",saveId);
         })
         .catch((error) => {
           console.error("Error writing document: ", error);

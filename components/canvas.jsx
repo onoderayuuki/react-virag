@@ -100,6 +100,7 @@ export default function Canvas() {
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
   const router = useRouter();
+  
   const {
     query: { designId },
   } = router;
@@ -177,18 +178,19 @@ export default function Canvas() {
   //   { id:"2erya" ,src: "./test3.png", x: 10, y: 200, rotation: 0 ,scaleX:1 ,width:30,height:30},
   // ]);
   const [images, setImages] = useState([]);
-  //DB取得関連
-  const seriesID = "e6sk0UkXAxNpLeRlJlFpWzZJNMA3";
-  const SeriesRef = db.collection("series").doc(seriesID);
-  
-  const MotifRef = db.collection("motif");
   const [motifs, setMotifs] = useState([]);
-  // const [motifs, setMotifs] = useState([
+// const [motifs, setMotifs] = useState([
   //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
   //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
   //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
   //   { id: "dddd", height: "100", width: "100", src: "/test2.png", tag: "" },
   // ]);
+
+  //DB取得関連
+  const seriesID = "e6sk0UkXAxNpLeRlJlFpWzZJNMA3";
+  const SeriesRef = db.collection("series").doc(seriesID);
+  const MotifRef = db.collection("motif");
+  
 
   //ランダムID生成関数
   function getUniqueStr(myStrong) {
@@ -224,12 +226,13 @@ export default function Canvas() {
           });
       }
     }
+
     SeriesRef.get()
       .then((doc) => {
         if (doc.exists) {
           // console.log("Document data:", doc.data());
           let newTags = doc.data().tagNames;
-          newTags.push("");
+          // newTags.push("");
           // console.log(newTags);
           const newTags2 = newTags.filter(function (tag) {
             return tag != "背景";
@@ -237,10 +240,14 @@ export default function Canvas() {
           // setTagNames(newTags2);
           const SeriesRef2 = db.collection("series").doc(userId);
           SeriesRef2.get()
-          .then((doc) => {
-            if (doc.exists) {
-              const newTags3 = doc.data().tagNames;
-              setTagNames([...newTags2,newTags3]);
+          .then((doc2) => {
+            if (doc2.exists) {
+              let newTags3 = doc2.data().tagNames;
+              const newTags４ = newTags3.filter(function (tag) {
+                return tag != "背景";
+              });
+              // console.log([...newTags2,newTags4]);
+              setTagNames([...newTags2 , newTags４,""]);
             } else {
               console.log("No such document!");
             }
@@ -255,24 +262,33 @@ export default function Canvas() {
       .catch((error) => {
         console.log("Error getting series:", error);
       });
-
       
-
-    MotifRef.get().then((snapshot) => {
-      // querySnapshot.forEach((doc) => {
-      //     // doc.data() is never undefined for query doc snapshots
-      //     console.log(doc.id, " => ", doc.data());
-      // });
-      setMotifs(
-        snapshot.docs.map((dbData) => ({
+     MotifRef.get().then((snapshot) => {
+      // setMotifs(
+        const motifs1 = snapshot.docs.map((dbData) => ({
           id: dbData.id,
           height: dbData.data().height,
           width: dbData.data().width,
           src: dbData.data().src,
           tag: dbData.data().tag,
-        }))
-      );
-      
+        }));
+      // );
+        const MotifRef2 = db.collection("users").doc(userId).collection("motif");
+        MotifRef2.get().then((snapshot2) => {
+          // setMotifs(
+            const motifs2 = snapshot2.docs.map((dbData) => ({
+              id: dbData.id,
+              height: dbData.data().height,
+              width: dbData.data().width,
+              src: dbData.data().src,
+              tag: dbData.data().tag,
+            }));
+            const newmotifs = motifs1.concat(motifs2);
+            setMotifs([...newmotifs]);
+          // );        
+        }).catch((error) => {
+          console.log("Error getting motifs: ", error);
+        });
     }).catch((error) => {
       console.log("Error getting motifs: ", error);
     });
@@ -331,7 +347,7 @@ export default function Canvas() {
       array.push({ name: tagName, onoff: true, motifs: thisMotifs });
     });
     setTags(array);
-    console.log(array);
+    // console.log(array);
     setOpen(true);
   };
 

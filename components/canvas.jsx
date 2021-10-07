@@ -241,7 +241,7 @@ export default function Canvas() {
     SeriesRef.get()
       .then((doc) => {
         if (doc.exists) {
-          // console.log("Document data:", doc.data());
+          console.log("SeriesDocument data:", doc.data());
           let newTags = doc.data().tagNames;
           // newTags.push("");
           // console.log(newTags);

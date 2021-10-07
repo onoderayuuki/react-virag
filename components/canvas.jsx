@@ -19,6 +19,7 @@ import LoopRoundedIcon from "@material-ui/icons/LoopRounded";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import SaveAltRoundedIcon from "@material-ui/icons/SaveAltRounded";
 import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
+import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
 import Chip from "@material-ui/core/Chip";
 // import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from "@material-ui/icons/Done";
@@ -241,7 +242,7 @@ export default function Canvas() {
     SeriesRef.get()
       .then((doc) => {
         if (doc.exists) {
-          console.log("SeriesDocument data:", doc.data());
+          // console.log("SeriesDocument data:", doc.data());
           let newTags = doc.data().tagNames;
           // newTags.push("");
           // console.log(newTags);
@@ -249,6 +250,8 @@ export default function Canvas() {
             return tag != "背景";
           });
           // setTagNames(newTags2);
+          setTagNames([...newTags2 , ""]);
+
           const SeriesRef2 = db.collection("series").doc(userId);
           SeriesRef2.get()
           .then((doc2) => {
@@ -257,17 +260,17 @@ export default function Canvas() {
               const newTags４ = newTags3.filter(function (tag) {
                 return tag != "背景";
               });
-              // console.log([...newTags2,newTags4]);
+              console.log([...newTags2,newTags4]);
               setTagNames([...newTags2 , newTags４,""]);
             } else {
-              console.log("No such document!");
+              console.log("No such Seriesdocument!",userId);
             }
           })
           .catch((error) => {
             console.log("Error getting series:", error);
           });
         } else {
-          console.log("No such document!");
+          console.log("No such Seriesdocument!",seriesID);
         }
       })
       .catch((error) => {
@@ -597,9 +600,15 @@ export default function Canvas() {
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
-        <Typography variant="p" style={{flexGrow:1}}>
+        <Typography variant="subtitle1" style={{flexGrow:1}}>
           {backImage.height} x {backImage.width} mm
         </Typography>
+        {/* <IconButton disabled color="primary" style={{ padding: "4px" }}>
+          <div>
+            <HighlightOffRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px", margin: "1px" }}>キャンバス削除</p>
+          </div>
+        </IconButton> */}
         <IconButton
           color="primary"
           style={{ padding: "4px" }}
@@ -610,12 +619,7 @@ export default function Canvas() {
             <p style={{ fontSize: "9px", margin: "1px" }}>ダウンロード</p>
           </div>
         </IconButton>
-        <IconButton disabled color="primary" style={{ padding: "4px" }}>
-          <div>
-            <ShareRoundedIcon fontSize="large" />
-            <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
-          </div>
-        </IconButton>
+        
         <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
           <div>
             <SaveRoundedIcon fontSize="large" />

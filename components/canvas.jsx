@@ -219,6 +219,7 @@ export default function Canvas() {
     setSaveId(designId);
     if (userId) {
       const designRef = db.collection("users").doc(userId).collection("design");
+
       if (designId != "new") {
         designRef
           .doc(designId)
@@ -230,13 +231,27 @@ export default function Canvas() {
               setBackImage(doc.data().backImage);
             } else {
               // doc.data() will be undefined in this case
-              console.log("No such document!",designId);
+              // console.log("No such document!",designId);
+              db.collection("design").doc(designId).get().then((doc2) => {
+                if (doc2.exists) {
+                  // console.log("Document data:", doc.data());
+                  setImages(doc2.data().images);
+                  setBackImage(doc2.data().backImage);
+                } else {
+                  // doc.data() will be undefined in this case
+                  console.log("No such document!",designId);
+                }
+              })
+              .catch((error) => {
+                console.log("Error getting design:", error);
+              });
             }
           })
           .catch((error) => {
             console.log("Error getting design:", error);
           });
       }
+
     }
 
     SeriesRef.get()
@@ -255,12 +270,13 @@ export default function Canvas() {
           const SeriesRef2 = db.collection("series").doc(userId);
           SeriesRef2.get()
           .then((doc2) => {
+            console.log(doc2);
             if (doc2.exists) {
               let newTags3 = doc2.data().tagNames;
               const newTags４ = newTags3.filter(function (tag) {
                 return tag != "背景";
               });
-              console.log([...newTags2,newTags4]);
+              // console.log([...newTags2,newTags4]);
               setTagNames([...newTags2 , newTags４,""]);
             } else {
               console.log("No such Seriesdocument!",userId);
@@ -606,14 +622,9 @@ export default function Canvas() {
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header>
         <Typography variant="subtitle1" style={{flexGrow:1}}>
-          {backImage.height} x {backImage.width} mm
+          {Math.ceil(backImage.height)} x {Math.ceil(backImage.width)} mm
         </Typography>
-        {/* <IconButton disabled color="primary" style={{ padding: "4px" }}>
-          <div>
-            <HighlightOffRoundedIcon fontSize="large" />
-            <p style={{ fontSize: "10px", margin: "1px" }}>キャンバス削除</p>
-          </div>
-        </IconButton> */}
+
         <IconButton
           color="primary"
           style={{ padding: "4px" }}

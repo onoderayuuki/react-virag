@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     height: "90vh",
     // backgroundColor: theme.palette.secondary.light,
     backgroundColor: "#F6F3EC",
-    // color:theme.palette.secondary.contrastText
+    color:"#660000"
   },
   link: {
     display: "flexed",
@@ -207,7 +207,7 @@ export default function Home() {
         </Button>
       </Header>
 
-      <div className={classes.homeContainer}>
+      <Box className={classes.homeContainer} pt={3}>
         <ImageListBox
           title="公開されているデザイン"
           itemList={openImages}
@@ -256,7 +256,7 @@ export default function Home() {
         </Dialog>
 
         {/* モチーフ部分 */}
-        <Box className={classes.box}>
+        <Box className={classes.box} mt={8}>
           <Typography variant="subtitle6" gutterBottom>
             モチーフ
           </Typography>
@@ -302,7 +302,7 @@ export default function Home() {
             </IconButton>
           </Box>
         </Box>
-      </div>
+      </Box>
     </>
   );
 }

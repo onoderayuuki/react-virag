@@ -80,6 +80,7 @@ export default function Home() {
   const classes = useStyles();
   const [plusBox, setPlusBox] = useState({ id: "new", src: "/plusbox.png" });
   const [canvasImages, setCanvasImages] = useState([]);
+  const [openImages, setOpenImages] = useState([]);
   // const [canvasImages, setcanvasImages] = useState([
   //   { id: "1", src: "/canvas-image.png"},
   //   { id: "2", src: "/canvas-image.png"},
@@ -93,13 +94,9 @@ export default function Home() {
   useEffect(() => {
     console.log("homeのuserID確認", userId);
     if (userId) {
-      const firebaseData = db
-        .collection("users")
-        .doc(userId)
-        .collection("design")
-        .orderBy("timestamp", "desc")
-        .onSnapshot((snapshot) => {
-          console.log("snapshot.docs:", snapshot.docs);
+      // const firebaseData = 
+      db.collection("users").doc(userId).collection("design").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+          console.log("Mysnapshot.docs:", snapshot.docs);
           if (snapshot.docs) {
             setCanvasImages(
               snapshot.docs.map((dbData) => ({
@@ -109,7 +106,18 @@ export default function Home() {
             );
           }
         });
-      return () => firebaseData();
+        db.collection("design").orderBy("timestamp", "desc").onSnapshot((snapshot) => {
+          console.log("Opensnapshot.docs:", snapshot.docs);
+          if (snapshot.docs) {
+            setOpenImages(
+              snapshot.docs.map((dbData) => ({
+                id: dbData.id,
+                src: dbData.data().base64,
+              }))
+            );
+          }
+        });
+      // return () => firebaseData();
     }
   }, [userId]);
 
@@ -202,15 +210,16 @@ export default function Home() {
       <div className={classes.homeContainer}>
         <ImageListBox
           title="公開されているデザイン"
-          itemList={canvasImages}
+          itemList={openImages}
         ></ImageListBox>
+
         <ImageListBox
           title="あなたのデザイン"
           itemList={[plusBox, ...canvasImages]}
           closeButton={true}
         ></ImageListBox>
 
-        {/* 削除 */}
+        {/* 削除ダイアログ */}
         <Dialog
           open={open}
           onClose={handleClose}
@@ -246,6 +255,7 @@ export default function Home() {
           </DialogActions>
         </Dialog>
 
+        {/* モチーフ部分 */}
         <Box className={classes.box}>
           <Typography variant="subtitle6" gutterBottom>
             モチーフ

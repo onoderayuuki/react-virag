@@ -10,13 +10,20 @@ import ListRoundedIcon from "@material-ui/icons/ListRounded";
 import PhotoAlbumRoundedIcon from "@material-ui/icons/PhotoAlbumRounded";
 import StarBorderIcon from "@material-ui/icons/StarBorder";
 import Button from "@material-ui/core/Button";
-import AccountCircleRoundedIcon from '@material-ui/icons/AccountCircleRounded';
+import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
+import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
 
 import Box from "@material-ui/core/Box";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import Typography from "@material-ui/core/Typography";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Header from "../components/header.js";
 
@@ -31,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   homeContainer: {
-    height:'90vh',
+    height: "90vh",
     // backgroundColor: theme.palette.secondary.light,
     backgroundColor: "#F6F3EC",
     // color:theme.palette.secondary.contrastText
@@ -55,12 +62,15 @@ const useStyles = makeStyles((theme) => ({
     transform: "translateZ(0)",
   },
   title: {
-    color: theme.palette.primary.light,
+    color: theme.palette.primary.dark,
   },
   titleBar: {
     background:
-      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
+      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 0%)",
+    top: "-10px",
+    left: "70px",
   },
+  actionIcon: {},
   box: {
     padding: "10px",
   },
@@ -81,7 +91,7 @@ export default function Home() {
   const userId = useContext(UserContext);
 
   useEffect(() => {
-    console.log("homeのuserID確認",userId);
+    console.log("homeのuserID確認", userId);
     if (userId) {
       const firebaseData = db
         .collection("users")
@@ -103,17 +113,42 @@ export default function Home() {
     }
   }, [userId]);
 
-  const ImageListBox = ({ title, itemList }) => {
+  const [open, setOpen] = useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [canvasID, setCanvasId] = useState("");
+  const deleteDesign = () => {
+    if (canvasID) {
+      const MotifRef = db
+        .collection("users")
+        .doc(userId)
+        .collection("design")
+        .doc(canvasID)
+        .delete()
+        .then(() => {
+          console.log("firestore:Document successfully deleted!", canvasID);
+        })
+        .catch((error) => {
+          console.error("firestore:Error removing document: ", error);
+        });
+    }
+  };
+
+  const ImageListBox = ({ title, itemList, closeButton }) => {
     return (
       <Box className={classes.box}>
-        {/* <p>{title}</p> */}
         <Typography variant="subtitle6" gutterBottom>
           {title}
         </Typography>
         <ImageList className={classes.imageList} cols={2.5}>
           {itemList != null &&
             itemList.map((item) => (
-              <ImageListItem key={item.id} >
+              <ImageListItem key={item.id}>
                 {/* TODO:ドキュメントIDの表示、登録日付表示 */}
                 <Link
                   href={{
@@ -122,18 +157,25 @@ export default function Home() {
                   }}
                   passHref
                 >
-                  <Image src={item.src} alt="#" height="180px" width="135px"/>
+                  <Image src={item.src} alt="#" height="180px" width="135px" />
                 </Link>
-                {item.id > 0 && (
+                {closeButton && item.id != "new" && (
                   <ImageListItemBar
-                    title="準備中：押せません"
                     classes={{
                       root: classes.titleBar,
                       title: classes.title,
+                      actionIcon: classes.actionIcon,
                     }}
+                    position="top"
                     actionIcon={
-                      <IconButton aria-label={`star ${item.title}`}>
-                        <StarBorderIcon className={classes.title} />
+                      <IconButton
+                        onClick={() => {
+                          console.log(item);
+                          setCanvasId(item.id);
+                          handleClickOpen();
+                        }}
+                      >
+                        <CancelRoundedIcon className={classes.title} />
                       </IconButton>
                     }
                   />
@@ -147,11 +189,13 @@ export default function Home() {
   return (
     <>
       <Header>
-        <Typography variant="h6" style={{flexGrow:1}}>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
           Virag
         </Typography>
         <Button color="inherit">
-          <Link href={"/login"}><AccountCircleRoundedIcon/></Link>
+          <Link href={"/login"} passHref>
+            <AccountCircleRoundedIcon />
+          </Link>
         </Button>
       </Header>
 
@@ -163,7 +207,45 @@ export default function Home() {
         <ImageListBox
           title="あなたのデザイン"
           itemList={[plusBox, ...canvasImages]}
+          closeButton={true}
         ></ImageListBox>
+
+        {/* 削除 */}
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"確認"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              デザインを削除してよいですか？
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setCanvasId("");
+                handleClose();
+              }}
+              color="primary"
+            >
+              キャンセル
+            </Button>
+            <Button
+              onClick={() => {
+                deleteDesign();
+                handleClose();
+              }}
+              color="primary"
+              autoFocus
+            >
+              はい
+            </Button>
+          </DialogActions>
+        </Dialog>
+
         <Box className={classes.box}>
           <Typography variant="subtitle6" gutterBottom>
             モチーフ

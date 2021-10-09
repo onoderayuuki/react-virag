@@ -7,8 +7,8 @@ export default function footer({ children }) {
     bottom: 0,
     fontSize: '8px',
     color:'white',
-    width:'100%',
-    // backgroundColor:theme.palette.background.paper
+    width:'95%',
+    backgroundColor:"#660000"
   };
     return (
       <Box position="fixed" style={appBar}>

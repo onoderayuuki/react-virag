@@ -122,7 +122,7 @@ export default function Home() {
                   }}
                   passHref
                 >
-                  <Image src={item.src} alt="#" height="200px" width="150px"/>
+                  <Image src={item.src} alt="#" height="180px" width="135px"/>
                 </Link>
                 {item.id > 0 && (
                   <ImageListItemBar

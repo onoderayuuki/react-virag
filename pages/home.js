@@ -105,7 +105,6 @@ export default function Home() {
   const ImageListBox = ({ title, itemList }) => {
     return (
       <Box className={classes.box}>
-        <p>{userId}</p>
         {/* <p>{title}</p> */}
         <Typography variant="subtitle6" gutterBottom>
           {title}

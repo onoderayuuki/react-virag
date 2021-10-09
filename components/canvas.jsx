@@ -471,7 +471,7 @@ export default function Canvas() {
   const stageRef = useRef(null);
   const downloadImage = () => {
     const dataURL = stageRef.current.toDataURL();
-    console.log(downloadImage);
+    // console.log(downloadImage);
     triggerBase64Download(dataURL, saveId);
   };
     //保存メッセージ

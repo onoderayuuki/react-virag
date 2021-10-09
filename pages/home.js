@@ -80,7 +80,7 @@ export default function Home() {
   const userId = useContext(UserContext);
 
   useEffect(() => {
-    console.log(userId);
+    console.log("homeのuserID確認",userId);
     if (userId) {
       const firebaseData = db
         .collection("users")
@@ -100,11 +100,12 @@ export default function Home() {
         });
       return () => firebaseData();
     }
-  }, []);
+  }, [userId]);
 
   const ImageListBox = ({ title, itemList }) => {
     return (
       <Box className={classes.box}>
+        <p>{userId}</p>
         {/* <p>{title}</p> */}
         <Typography variant="subtitle6" gutterBottom>
           {title}

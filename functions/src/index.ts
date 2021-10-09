@@ -22,7 +22,7 @@ export const onUsersMotifUpdate = functions.firestore.document('/users/{userId}/
   await copyToRootWithUsersMotifSnapshot(change.after, context);
 });
 export const onUsersMotifDelete = functions.firestore.document('/users/{userId}/motif/{motifId}').onDelete(async (snapshot, context) => {
-  await deleteToRootWithUsersMotifSnapshot(snapshot, context);
+  await deleteFromRootWithUsersMotifSnapshot(snapshot, context);
 });
 
 async function copyToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.DocumentSnapshot, context: functions.EventContext) {
@@ -36,13 +36,14 @@ async function copyToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.Docu
   }
 }
 
-async function deleteToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.DocumentSnapshot, context: functions.EventContext) {
+async function deleteFromRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.DocumentSnapshot, context: functions.EventContext) {
   const motifId = snapshot.id;
   const userId = context.params.userId;
   const motif = snapshot.data() as RootMotif;
 
   motif.authorRef = firestore.collection('users').doc(userId);
   if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
+    console.log("delete",motifId);
     await firestore.collection('motif').doc(motifId).delete();
   }
 }

@@ -21,6 +21,9 @@ export const onUsersMotifCreate = functions.firestore.document('/users/{userId}/
 export const onUsersMotifUpdate = functions.firestore.document('/users/{userId}/motif/{motifId}').onUpdate(async (change, context) => {
   await copyToRootWithUsersMotifSnapshot(change.after, context);
 });
+export const onUsersMotifDelete = functions.firestore.document('/users/{userId}/motif/{motifId}').onDelete(async (snapshot, context) => {
+  await deleteToRootWithUsersMotifSnapshot(snapshot, context);
+});
 
 async function copyToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.DocumentSnapshot, context: functions.EventContext) {
   const motifId = snapshot.id;
@@ -31,8 +34,19 @@ async function copyToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.Docu
   if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
     await firestore.collection('motif').doc(motifId).set(motif, { merge: true });
   }
-
 }
+
+async function deleteToRootWithUsersMotifSnapshot(snapshot: FirebaseFirestore.DocumentSnapshot, context: functions.EventContext) {
+  const motifId = snapshot.id;
+  const userId = context.params.userId;
+  const motif = snapshot.data() as RootMotif;
+
+  motif.authorRef = firestore.collection('users').doc(userId);
+  if(userId=="e6sk0UkXAxNpLeRlJlFpWzZJNMA3"){
+    await firestore.collection('motif').doc(motifId).delete();
+  }
+}
+
 
 //シリーズ
 interface Series {

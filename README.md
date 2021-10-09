@@ -46,6 +46,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ## Function deploy
 - function/srcの内容がfirestore.functionに反映されるはず
     -  DBの連動更新用 
+- ビルド
+Cmd/Ctrl + Shift + B （あるいはメニューから Terminal → Run Build Task…）
+tsc: build - tsconfig.json を選択して Enter
+
+- デプロイ
 ```
 firebase deploy --only functions
 ```

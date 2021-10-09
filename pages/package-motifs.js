@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
+import Typography from "@material-ui/core/Typography";
 
 // import { DndProvider } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
@@ -212,6 +213,9 @@ export default function Package() {
   return (
     <>
       <Header>
+      <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Virag
+        </Typography>
         <IconButton color="primary" onClick={saveDB}>
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
@@ -225,7 +229,7 @@ export default function Package() {
           <Grid
             item
             xs={9}
-            style={{ backgroundColor: "#660000", height: "100%" }}
+            style={{ backgroundColor: "#660000", height: "100vh" }}
           >
             <Input
               color="secondary"

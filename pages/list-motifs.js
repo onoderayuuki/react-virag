@@ -10,6 +10,7 @@ import ImageListItem from '@material-ui/core/ImageListItem';
 import IconButton from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import HeightRoundedIcon from '@material-ui/icons/HeightRounded';
+import Typography from "@material-ui/core/Typography";
 
 import ResizeMotif from './resize-motif'
 import Header from "../components/header.js";
@@ -96,7 +97,11 @@ export default function ListMotifs() {
 
   return (
     <>
-      <Header />
+      <Header>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+            Virag
+        </Typography>
+      </Header>
       {!isShow && 
       <>
       <div className={classes.list_container}>

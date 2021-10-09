@@ -134,7 +134,11 @@ export default function Login(props) {
 
   return (
     <>
-      <Header />
+      <Header>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Virag
+        </Typography>
+      </Header>
       <Grid>
         {account && (
           <Typography>

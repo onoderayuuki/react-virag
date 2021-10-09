@@ -7,6 +7,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import CheckRoundedIcon from "@material-ui/icons/CheckRounded";
 import IconButton from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
+
 
 import Header from "../components/header.js";
 import Footer from "./footer.js";
@@ -82,7 +84,11 @@ export default function Add() {
 
   return (
     <>
-      <Header />
+      <Header>
+      <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Virag
+        </Typography>
+      </Header>
       {!isShow && (
         <>
           <div className={classes.addContainer}>

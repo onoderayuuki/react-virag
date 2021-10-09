@@ -351,7 +351,9 @@ export default function Canvas() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [addMode, setAddMode] = useState("change");
+
   const handleOpen = (mode, tagArray) => {
+    console.log(mode);
     setAddMode(mode);
     let array = [];
     tagArray.map((tagName) => {
@@ -412,7 +414,10 @@ export default function Canvas() {
       ];
       // console.log(newImages);
       updateImages(newImages);
+    }else if (addMode == "back"){
+      setBackImage({...backImage,src: motif.src, width: motif.width, height: motif.height })
     }
+
   };
 
   //削除
@@ -753,7 +758,7 @@ export default function Canvas() {
       <Toolbar>
         <IconButton
           color="primary"
-          onClick={() => handleOpen("change", ["背景"])}
+          onClick={() => handleOpen("back", ["背景"])}
           style={{ padding: "0" }}
         >
           <div>

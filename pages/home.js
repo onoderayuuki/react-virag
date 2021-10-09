@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme) => ({
   },
   homeContainer: {
     height:'90vh',
-    backgroundColor: theme.palette.secondary.light,
+    // backgroundColor: theme.palette.secondary.light,
+    backgroundColor: "#F6F3EC",
     // color:theme.palette.secondary.contrastText
   },
   link: {
@@ -112,7 +113,7 @@ export default function Home() {
         <ImageList className={classes.imageList} cols={2.5}>
           {itemList != null &&
             itemList.map((item) => (
-              <ImageListItem key={item.id}>
+              <ImageListItem key={item.id} >
                 {/* TODO:ドキュメントIDの表示、登録日付表示 */}
                 <Link
                   href={{
@@ -121,7 +122,7 @@ export default function Home() {
                   }}
                   passHref
                 >
-                  <Image src={item.src} alt="#" height="200px" width="150px" />
+                  <Image src={item.src} alt="#" height="200px" width="150px"/>
                 </Link>
                 {item.id > 0 && (
                   <ImageListItemBar

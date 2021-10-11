@@ -86,7 +86,7 @@ export default function Login(props) {
     console.log("handleForgotPassword");
     try {
       auth.sendPasswordResetEmail(email);
-      setSuccessMessage("パスワードを初期化しました。");
+      setSuccessMessage("パスワード初期化の為のメールを送信しました。");
     } catch (e) {
       //エラーのメッセージの表示
       ErrorSet(e);

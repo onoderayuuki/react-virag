@@ -150,7 +150,7 @@ export default function Home() {
   const ImageListBox = ({ title, itemList, closeButton }) => {
     return (
       <Box className={classes.box}>
-        <Typography variant="subtitle6" gutterBottom>
+        <Typography variant="subtitle1" gutterBottom>
           {title}
         </Typography>
         <ImageList className={classes.imageList} cols={2.5}>
@@ -257,7 +257,7 @@ export default function Home() {
 
         {/* モチーフ部分 */}
         <Box className={classes.box} mt={8}>
-          <Typography variant="subtitle6" gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             モチーフ
           </Typography>
           <Box>

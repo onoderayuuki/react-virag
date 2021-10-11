@@ -65,7 +65,7 @@ export default function ListMotifs() {
   useEffect(() => {
     if(userId){
       const MotifRef = db.collection("users").doc(userId).collection("motif");
-      const firebaseData = MotifRef.onSnapshot((snapshot) => {
+      const firebaseData = MotifRef.orderBy("timestamp", "desc").onSnapshot((snapshot) => {
         setMotifs(
           snapshot.docs.map((dbData) => ({
             id: dbData.id,

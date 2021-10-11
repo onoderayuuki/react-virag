@@ -350,6 +350,7 @@ export default function Canvas() {
   const [historyStep, setHistoryStep] = useState(0);
 
   const updateImages = (newImages) => {
+    // console.log("updateImage:",newImages);
     setImages(newImages);
     setHistory([...history, newImages]);
     setHistoryStep(historyStep + 1);
@@ -437,7 +438,6 @@ export default function Canvas() {
   };
 
   //削除
-  //lengthで生成しているIDがダブってしまうのでは？？？
   const handleDelete = () => {
     const newImages = images.filter(function (image) {
       return image.id != selectedId;
@@ -702,7 +702,7 @@ export default function Canvas() {
                             }}
                           />
                           <ImageListItemBar
-                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)}
+                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)+' : ' +motif.id}
                               classes={{
                                 root: classes.titleBar,
                                 subtitle: classes.subtitle,

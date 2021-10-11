@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/Button';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import HeightRoundedIcon from '@material-ui/icons/HeightRounded';
 import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
 import ResizeMotif from './resize-motif'
 import Header from "../components/header.js";
@@ -153,7 +154,10 @@ export default function ListMotifs() {
               <p style={{fontSize:'10px'}}>サイズ変更</p>
             </div>
           </IconButton>
-          {/* <span>{motifs[selectMotifId]['height']}*{motifs[selectMotifId]['width']}</span> */}
+          <Box>
+          <p>{motifs[selectMotifId]['height']}*{motifs[selectMotifId]['width']}</p>
+          <p>{motifs[selectMotifId]['id']}</p>
+          </Box>
           </>}
         </Footer>
         </>

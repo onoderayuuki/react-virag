@@ -72,6 +72,7 @@ export default function ListMotifs() {
             height: dbData.data().height,
             width: dbData.data().width,
             src: dbData.data().src,
+            tag: dbData.data().tag,
           }))
         );
         console.log(snapshot.docs);
@@ -168,6 +169,7 @@ export default function ListMotifs() {
           height={motifs[selectMotifId]['height']} 
           width={motifs[selectMotifId]['width']} 
           src={motifs[selectMotifId]['src']}
+          tag={motifs[selectMotifId]['tag']}
           image=""
         />
       }

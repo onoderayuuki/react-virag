@@ -54,7 +54,7 @@ export default function ResizeMotif(props) {
   // const [motif, setMotif] = useState({ id: "1", height: "300", width: "200", src: "/test.png" });
   const [inputHeight, setInputHeight] = useState(props.height);
   const [inputWidth, setInputWidth] = useState(props.width);
-
+  console.log(props);
   const [motif, setMotif] = useState({
     id: props.id,
     height: props.height,
@@ -101,6 +101,7 @@ export default function ResizeMotif(props) {
                       width: motif.width,
                       src: url,
                       tag: "",
+                      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
                     })
                       .then((docRef) => {
                         console.log("Document written with ID: ", docRef.id);
@@ -119,14 +120,15 @@ export default function ResizeMotif(props) {
           width: motif.width,
           src: props.src,
           tag: props.tag,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
           .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
+            console.log("Document written with ID: ", docRef);
             window.location.href='/'
 
         })
         .catch((error) => {
-          console.error("Error adding document: ", error);
+          console.error("Error seting document: ", error);
         });
       }
     }

@@ -1,5 +1,8 @@
 import { useState, useEffect ,useContext} from "react";
 
+import Router from "next/router";
+import { useBeforeUnload } from "react-use";
+
 import Grid from "@material-ui/core/Grid";
 import { IconButton,Box } from "@material-ui/core";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
@@ -64,8 +67,23 @@ export default function Package() {
     // const userId = "ZZeI9mOadD7wxmT26dqB";
     const userId = useContext(UserContext);
 
-  //データ取得
+
+    const [isConfirm,setIsConfirm] = useState(false);
+    const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
+    useBeforeUnload(isConfirm, message);
+
+    const handler = () => {
+      if (isConfirm && !window.confirm(message)) {
+        console.log("handler",isConfirm)
+        throw "Route Canceled";
+      }
+    };
+
+    //データ取得
   useEffect(() => {
+
+    Router.events.on("routeChangeStart", handler);
+
     if(userId){
       const MotifRef = db.collection("users").doc(userId).collection("motif");
       const SeriesRef = db.collection("users").doc(userId).collection("series");
@@ -144,12 +162,15 @@ export default function Package() {
 
   const handleClick = () => {
     setOpen(true);
+    Router.events.off("routeChangeStart", handler);
+
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
+    setIsConfirm(false);
     setOpen(false);
   };
 
@@ -169,6 +190,7 @@ export default function Package() {
     });
     setTagNames(newTags);
     setMotifs(newMotifs);
+    setIsConfirm(true);
   };
 
   const changeTag = (item, Tagname) => {
@@ -180,6 +202,7 @@ export default function Package() {
       tag: Tagname,
     };
     setMotifs(newMotifs);
+    setIsConfirm(true);
   };
 
   // const Container = () => {
@@ -220,6 +243,7 @@ export default function Package() {
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
       </Header>
+        <p>{isConfirm? 'true' : 'false'}</p>
       {/* <DndProvider backend={TouchBackend}> */}
       <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>

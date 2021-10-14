@@ -265,19 +265,19 @@ export default function Canvas() {
             return tag != "背景";
           });
           // setTagNames(newTags2);
-          setTagNames([...newTags2 , ""]);
+          setTagNames([...newTags2,""] );
 
-          const SeriesRef2 = db.collection("series").doc(userId);
+          const SeriesRef2 = db.collection("users").doc(userId).collection("series").doc(userId);
           SeriesRef2.get()
           .then((doc2) => {
             console.log(doc2);
             if (doc2.exists) {
               let newTags3 = doc2.data().tagNames;
-              const newTags４ = newTags3.filter(function (tag) {
+              const newTags4 = newTags3.filter(function (tag) {
                 return tag != "背景";
               });
-              // console.log([...newTags2,newTags4]);
-              setTagNames([...newTags2 , newTags４,""]);
+              console.log([...newTags2,...newTags4]);
+              setTagNames([...newTags2 , ...newTags4,""]);
             } else {
               console.log("No such Seriesdocument!",userId);
             }

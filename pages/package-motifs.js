@@ -87,16 +87,7 @@ export default function Package() {
   //保存前のページ移動制御
     const [isConfirm,setIsConfirm] = useState(false);
     const [leaveOpen,setleaveOpen] = useState(false);
-    // const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
-    // const homeClick=()=>{
-    //   if(flg){
-    //     setOpen(true);
-    //     console.log(message);
-    //   }else{
-    //     console.log("ホーム移動");
-    //     window.location.href='/'
-    //   }
-    // }
+    
 
     //データ取得
   useEffect(() => {
@@ -336,7 +327,7 @@ export default function Package() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"確認"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             保存されていません。<br/> 編集した内容は失われますが、このページを離れてもよろしいですか?

@@ -12,7 +12,6 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography";
-import { ChangeContext } from "./context";
 
 // import { DndProvider } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
@@ -24,7 +23,8 @@ import { ChangeContext } from "./context";
 import { Dustbin } from "../components/Dustbin";
 import { DndBox } from "../components/DndBox";
 
-import Header from "../components/header.js";
+// import Header from "../components/header.js";
+import Header2 from "../components/header2.js";
 
 import { db } from "../components/firebase";
 import { UserContext } from "./_app";
@@ -33,6 +33,16 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
 
 import { DndProvider, TouchTransition, MouseTransition } from 'react-dnd-multi-backend'
+
+import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 export const HTML5toTouch = {
   backends: [
@@ -53,8 +63,8 @@ export const HTML5toTouch = {
 
 export default function Package() {
 
-  const ctx = useContext(ChangeContext);
-  console.log("flg",ctx);
+  // const ctx = useContext(ChangeContext);
+  // console.log("flg",ctx);
     // Context値更新
 
 
@@ -74,11 +84,19 @@ export default function Package() {
     // const userId = "ZZeI9mOadD7wxmT26dqB";
     const userId = useContext(UserContext);
 
-
-    // const [isConfirm,setIsConfirm] = useState(true);
+  //保存前のページ移動制御
+    const [isConfirm,setIsConfirm] = useState(false);
+    const [leaveOpen,setleaveOpen] = useState(false);
     // const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
-    // useBeforeUnload(isConfirm, message);
-
+    // const homeClick=()=>{
+    //   if(flg){
+    //     setOpen(true);
+    //     console.log(message);
+    //   }else{
+    //     console.log("ホーム移動");
+    //     window.location.href='/'
+    //   }
+    // }
 
     //データ取得
   useEffect(() => {
@@ -160,15 +178,13 @@ export default function Package() {
 
   const handleClick = () => {
     setOpen(true);
-    Router.events.off("routeChangeStart", handler);
-
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    // setIsConfirm(false);
+    setIsConfirm(false);
     setOpen(false);
   };
 
@@ -188,7 +204,7 @@ export default function Package() {
     });
     setTagNames(newTags);
     setMotifs(newMotifs);
-    // setIsConfirm(true);
+    setIsConfirm(true);
   };
 
   const changeTag = (item, Tagname) => {
@@ -200,7 +216,7 @@ export default function Package() {
       tag: Tagname,
     };
     setMotifs(newMotifs);
-    // setIsConfirm(true);
+    setIsConfirm(true);
   };
 
   // const Container = () => {
@@ -230,20 +246,24 @@ export default function Package() {
     );
   };
 
-
   return (
     <>
-      <Header>
+      <Header2>
+      <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={()=>{ isConfirm?setleaveOpen(true) : window.location.href='/' }}
+        >
+            <HomeRoundedIcon  fontSize="large" />
+        </IconButton>
       <Typography variant="h6" style={{ flexGrow: 1 }}>
           Virag
         </Typography>
         <IconButton color="primary" onClick={saveDB}>
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
-      </Header>
-        <button onClick={()=>{ctx.setIsDark(!ctx.dark)}}>
-        Toggle theme context!
-        </button>
+      </Header2>
         
       {/* <DndProvider backend={TouchBackend}> */}
       <DndProvider options={HTML5toTouch}>
@@ -310,6 +330,27 @@ export default function Package() {
             </>
         }
       />
+      <Dialog
+        open={leaveOpen}
+        onClose={()=>{setleaveOpen(false)}}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            保存されていません。<br/> 編集した内容は失われますが、このページを離れてもよろしいですか?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>{setleaveOpen(false)}} color="primary" autoFocus>
+            キャンセル
+          </Button>
+          <Button onClick={()=>{window.location.href='/'}} color="primary">
+            はい
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

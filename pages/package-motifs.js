@@ -243,7 +243,7 @@ export default function Package() {
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
       </Header>
-        <p>{isConfirm? 'true' : 'false'}</p>
+        {/* <p>{isConfirm? 'true' : 'false'}</p> */}
       {/* <DndProvider backend={TouchBackend}> */}
       <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>

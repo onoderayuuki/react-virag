@@ -1,10 +1,14 @@
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { auth, db } from "../components/firebase";
 import { useState, createContext,useEffect } from "react";
+import { useRouter } from 'next/router'
+import { ChangeContext, useDark } from './context.js';
 
 import  Loading from './loading.js' 
 
+
 export const UserContext = createContext();
+// export const ChangeContext = createContext();
 
 export const theme = createTheme({
   palette: {
@@ -22,7 +26,12 @@ export const theme = createTheme({
 });
 
 export default function MyApp({ Component, pageProps }) {
+  const ctx = useDark();
+  
+  const router = useRouter()
+  // const [isConfirm, setIsConfirm] = useState(false);
   const [userID, setUserID] = useState("");
+
   const getCurrentDate = (separator = "") => {
     let newDate = new Date();
     let date = newDate.getDate();
@@ -32,6 +41,7 @@ export default function MyApp({ Component, pageProps }) {
       month < 10 ? `0${month}` : `${month}`
     }${separator}${date}`;
   };
+
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       // 未ログイン時
@@ -81,12 +91,29 @@ export default function MyApp({ Component, pageProps }) {
           });
       }
     });
-  },[]);
+
+    const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
+    const handleRouteChange=()=>{
+      console.log("handler",ctx)
+      if (ctx.dark && !window.confirm(message)) {
+        throw "Route Canceled";
+      }
+    }
+      router.events.on('routeChangeStart', handleRouteChange)
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChange)
+    }
+
+  },ctx);
   return (
     <ThemeProvider theme={theme}>
       <UserContext.Provider value={userID}>
+
+      <ChangeContext.Provider value={ctx}>
         {!userID&&<Loading />}
         {userID&&<Component {...pageProps} />}
+      </ChangeContext.Provider>
+
       </UserContext.Provider>
     </ThemeProvider>
   );

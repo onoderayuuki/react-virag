@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/login_init.js"  ],
+, "pages/login_init.js", "pages/context.js"  ],
   "exclude": [
     "node_modules"
   ]

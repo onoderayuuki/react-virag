@@ -12,6 +12,7 @@ import AddRoundedIcon from '@material-ui/icons/AddRounded';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography";
+import { ChangeContext } from "./context";
 
 // import { DndProvider } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
@@ -51,6 +52,12 @@ export const HTML5toTouch = {
 }
 
 export default function Package() {
+
+  const ctx = useContext(ChangeContext);
+  console.log("flg",ctx);
+    // Context値更新
+
+
   // const [seriesTitle, setSeriesTitle] = useState("untitle-test");
   // const [tagNames, setTagNames] = useState(["tag0", "tag1", "tag2"]);
   // const [motifs, setMotifs] = useState([
@@ -68,22 +75,13 @@ export default function Package() {
     const userId = useContext(UserContext);
 
 
-    const [isConfirm,setIsConfirm] = useState(false);
-    const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
-    useBeforeUnload(isConfirm, message);
+    // const [isConfirm,setIsConfirm] = useState(true);
+    // const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
+    // useBeforeUnload(isConfirm, message);
 
-    const handler = () => {
-      if (isConfirm && !window.confirm(message)) {
-        console.log("handler",isConfirm)
-        throw "Route Canceled";
-      }
-    };
 
     //データ取得
   useEffect(() => {
-
-    Router.events.on("routeChangeStart", handler);
-
     if(userId){
       const MotifRef = db.collection("users").doc(userId).collection("motif");
       const SeriesRef = db.collection("users").doc(userId).collection("series");
@@ -170,7 +168,7 @@ export default function Package() {
     if (reason === 'clickaway') {
       return;
     }
-    setIsConfirm(false);
+    // setIsConfirm(false);
     setOpen(false);
   };
 
@@ -190,7 +188,7 @@ export default function Package() {
     });
     setTagNames(newTags);
     setMotifs(newMotifs);
-    setIsConfirm(true);
+    // setIsConfirm(true);
   };
 
   const changeTag = (item, Tagname) => {
@@ -202,7 +200,7 @@ export default function Package() {
       tag: Tagname,
     };
     setMotifs(newMotifs);
-    setIsConfirm(true);
+    // setIsConfirm(true);
   };
 
   // const Container = () => {
@@ -243,7 +241,10 @@ export default function Package() {
           <SaveRoundedIcon fontSize="large" />
         </IconButton>
       </Header>
-        {/* <p>{isConfirm? 'true' : 'false'}</p> */}
+        <button onClick={()=>{ctx.setIsDark(!ctx.dark)}}>
+        Toggle theme context!
+        </button>
+        
       {/* <DndProvider backend={TouchBackend}> */}
       <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>

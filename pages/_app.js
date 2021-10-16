@@ -2,7 +2,7 @@ import { createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { auth, db } from "../components/firebase";
 import { useState, createContext,useEffect } from "react";
 import { useRouter } from 'next/router'
-import { ChangeContext, useDark } from './context.js';
+// import { ChangeContext, useDark } from './context.js';
 
 import  Loading from './loading.js' 
 
@@ -26,7 +26,7 @@ export const theme = createTheme({
 });
 
 export default function MyApp({ Component, pageProps }) {
-  const ctx = useDark();
+  // const ctx = useDark();
   
   const router = useRouter()
   // const [isConfirm, setIsConfirm] = useState(false);
@@ -42,6 +42,18 @@ export default function MyApp({ Component, pageProps }) {
     }${separator}${date}`;
   };
 
+  //ブラウザバック禁止
+  const overridePopstate = () => {
+    history.pushState(null, null, null)
+    console.log("history back");
+}
+  useEffect(() => {
+  history.pushState(null, null, null)
+   window.addEventListener('popstate', overridePopstate, false)
+   return () => window.removeEventListener('popstate', overridePopstate, false)
+ }, [])
+
+ //データ読み込み
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       // 未ログイン時
@@ -92,27 +104,26 @@ export default function MyApp({ Component, pageProps }) {
       }
     });
 
-    const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
-    const handleRouteChange=()=>{
-      console.log("handler",ctx)
-      if (ctx.dark && !window.confirm(message)) {
-        throw "Route Canceled";
-      }
-    }
-      router.events.on('routeChangeStart', handleRouteChange)
-    return () => {
-      router.events.off('routeChangeStart', handleRouteChange)
-    }
+    // const message = "保存されていません。\n編集した内容は失われますが、このページを離れてもよろしいですか?"
+    // const handleRouteChange=()=>{
+    //   console.log("handler",ctx)
+    //   if (ctx.dark && !window.confirm(message)) {
+    //     throw "Route Canceled";
+    //   }
+    // }
+    //   router.events.on('routeChangeStart', handleRouteChange)
+    // return () => {
+    //   router.events.off('routeChangeStart', handleRouteChange)
+    // }
 
-  },ctx);
+  },[]);
   return (
     <ThemeProvider theme={theme}>
       <UserContext.Provider value={userID}>
-
-      <ChangeContext.Provider value={ctx}>
+      {/* <ChangeContext.Provider value={ctx}> */}
         {!userID&&<Loading />}
         {userID&&<Component {...pageProps} />}
-      </ChangeContext.Provider>
+      {/* </ChangeContext.Provider> */}
 
       </UserContext.Provider>
     </ThemeProvider>

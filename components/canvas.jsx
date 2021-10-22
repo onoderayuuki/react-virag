@@ -491,7 +491,9 @@ export default function Canvas() {
 
   const stageRef = useRef(null);
   const downloadImage = () => {
-    const dataURL = stageRef.current.toDataURL();
+    const dataURL = stageRef.current.toDataURL({
+      pixelRatio:2// or other value you need
+    });
     // console.log(downloadImage);
     triggerBase64Download(dataURL, saveId);
   };

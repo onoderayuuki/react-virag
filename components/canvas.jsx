@@ -490,11 +490,22 @@ export default function Canvas() {
   //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII=';
 
   const stageRef = useRef(null);
+
+  const adjustCanvas = () =>{
+    //全体が写るようにスケール変更
+    // console.log(backImage.height);
+    // console.log(stageRef.current.attrs.width);
+    stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
+    stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
+  }
+  
   const downloadImage = () => {
+    adjustCanvas();
+    
     const dataURL = stageRef.current.toDataURL({
-      pixelRatio:2// or other value you need
+      pixelRatio:1/stageRef.current.attrs.scaleX
     });
-    // console.log(downloadImage);
+
     triggerBase64Download(dataURL, saveId);
   };
     //保存メッセージ

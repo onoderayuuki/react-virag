@@ -259,6 +259,7 @@ export default function Package() {
       {/* <DndProvider backend={TouchBackend}> */}
       <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>
+          
           <Grid item xs={3}>
             <Boxes tag="" />
           </Grid>
@@ -304,6 +305,8 @@ export default function Package() {
           </Grid>
         </Grid>      
         </DndProvider>
+
+      {/* 保存ダイアログ */}
         <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -321,6 +324,8 @@ export default function Package() {
             </>
         }
       />
+
+      {/* ページ離脱ダイアログ */}
       <Dialog
         open={leaveOpen}
         onClose={()=>{setleaveOpen(false)}}

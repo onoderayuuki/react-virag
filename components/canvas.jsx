@@ -503,7 +503,7 @@ export default function Canvas() {
     adjustCanvas();
     
     const dataURL = stageRef.current.toDataURL({
-      pixelRatio:1/stageRef.current.attrs.scaleX
+      pixelRatio:2/stageRef.current.attrs.scaleX
     });
 
     triggerBase64Download(dataURL, saveId);

@@ -324,10 +324,13 @@ export default function Canvas() {
     });
 
   }, []);
-
+const stage = ""
   const handleTouch = (e) => {
     //  console.log(e.target.getStage().scaleX());
-    const stage = e.target.getStage();
+    let stage = e.target.getStage();
+    console.log(stage);
+    console.log(stageRef);
+
     if (e.evt.touches.length >= 2) {
       getMultiTouchOnStage(e.evt.touches[0], e.evt.touches[1], stage);
     } else {
@@ -495,18 +498,26 @@ export default function Canvas() {
     //全体が写るようにスケール変更
     // console.log(backImage.height);
     // console.log(stageRef.current.attrs.width);
+    // stage.scaleX(scale);
+    // stageRef.current.attrs.x = 0
+    // stageRef.current.attrs.y = 0
+    // const stage = stageRef.getStage();
+    // console.log(stage)
+    stageRef.current.scaleX(1);
+    stageRef.current.scaleY(1);
+    stageRef.current.position({x:0,y:0});
+    stageRef.current.attrs.height = ((backImage.height * 72) / 25.4)
     stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
-    stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
-    stageRef.current.attrs.scaleX=1
+    
   }
   
   const downloadImage = () => {
+    console.log(stageRef.current.attrs);
     adjustCanvas();
-    
+    console.log(stageRef.current.attrs);
     const dataURL = stageRef.current.toDataURL({
-      pixelRatio:2/stageRef.current.attrs.scaleX
+      pixelRatio:1
     });
-
     triggerBase64Download(dataURL, saveId);
   };
     //保存メッセージ
@@ -599,8 +610,8 @@ export default function Canvas() {
 
       const ratio = lastDist ? dist / lastDist : 1;
       const scale = stage.scaleX() * ratio;
-      console.log(dist, lastDist);
-      console.log(stage.scaleX(), ratio);
+      // console.log(dist, lastDist);
+      console.log("stage.scaleX()",stage.scaleX());
       // console.log(ratio,scale)
 
       // local coordinates of center point
@@ -617,7 +628,7 @@ export default function Canvas() {
         y: newCenter.y - pointTo.y * scale + dy,
       };
 
-      console.log(stage.position(), stage.x(), stage.y());
+      // console.log(stage.position(), stage.x(), stage.y());
       if (scale > 0.1) {
         stage.scaleX(scale);
         stage.scaleY(scale);

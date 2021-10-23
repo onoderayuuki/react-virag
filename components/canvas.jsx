@@ -376,18 +376,36 @@ const stage = ""
     console.log(mode);
     setAddMode(mode);
     let array = [];
+
+    if(mode=="add"){
+      array.push({ name: "all", onoff: false, motifs: motifs })
+    }
+    
     tagArray.map((tagName) => {
       const thisMotifs = motifs.filter(function (motif) {
         return motif.tag == tagName;
       });
-      array.push({ name: tagName, onoff: true, motifs: thisMotifs });
+      array.push({ name: tagName, onoff: false, motifs: thisMotifs });
     });
+
+    array[0]["onoff"]=true;
+
     setTags(array);
     // console.log(array);
     setOpen(true);
   };
+    //タグクリック
+  const handleTagClick = (i) => {
+    // const newTags = tags.slice();
+    const newTags = tags.map((tag)=>{
+      return { ...tag ,onoff : false}
+    })
+    newTags[i]["onoff"] = true;
+    setTags(newTags);
+  };
 
   const handleClose = () => setOpen(false);
+
   const style = {
     position: "absolute",
     top: "50%",
@@ -569,14 +587,6 @@ const stage = ""
     
   };
 
-  const handleTagClick = (i) => {
-    const newTags = tags.slice();
-    newTags[i]["onoff"] = !tags[i]["onoff"];
-    setTags(newTags);
-    // console.log(i);
-    // console.log(tags[i]['onoff']);
-  };
-
   //ページの拡大縮小
   const getCenter = (p1, p2) => {
     return {
@@ -685,7 +695,7 @@ const stage = ""
             </>
         }
       />
-      {/* モーダル */}
+      {/* 追加イメージ用モーダル */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -693,7 +703,7 @@ const stage = ""
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Box>
+          <Box overflow="auto" flexWrap="nowrap" display="flex">
             {tags.map((tag, i) => {
               return (
                 <Chip

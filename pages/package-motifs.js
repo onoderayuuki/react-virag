@@ -122,14 +122,17 @@ export default function Package() {
           console.log("Error getting document:", error);
         });
 
+       
       const MotifData = MotifRef.onSnapshot((snapshot) => {
         setMotifs(
           snapshot.docs.map((dbData) => ({
             id: dbData.id,
-            height: dbData.data().height,
-            width: dbData.data().width,
+            height: (dbData.data().width < 30 ? dbData.data().height* 72/ 25.4 : dbData.data().height/dbData.data().width*90),
+            width: (dbData.data().width < 30 ? dbData.data().width* 72/ 25.4 : 90),
             src: dbData.data().src,
             tag: dbData.data().tag,
+            trueHeight:dbData.data().height,
+            trueWidth:dbData.data().width,
           }))
         );
         console.log(snapshot.docs);
@@ -210,7 +213,16 @@ export default function Package() {
     setIsConfirm(true);
   };
 
-  // const Container = () => {
+  const deleteMotif = (id)=>{
+    const MotifRef = db.collection("users").doc(userId).collection("motif");
+    MotifRef.doc(id).delete().then(() => {
+      console.log("firestore:Document successfully deleted!",id);
+  }).catch((error) => {
+      console.error("firestore:Error removing document: ", error);
+  });
+  }
+
+  // タグづけされていないモチーフ並べる
   const Boxes = function Box({ tag }) {
     let tagMotifs = motifs;
     if (tag != null) {
@@ -225,9 +237,12 @@ export default function Package() {
             key={motif.id}
             id={motif.id}
             // alt={motif.id}
-            height={100}
-            width={100}
+            height={motif.height}
+            width={motif.width}
+            trueHeight={Math.ceil(motif.trueHeight)}
+            trueWidth={Math.ceil(motif.trueWidth)}
             src={motif.src}
+            deleteMotif={(id)=>{deleteMotif(id);}}
             onChange={(item, dropResult) => {
               changeTag(item, dropResult);
             }}

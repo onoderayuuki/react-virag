@@ -2,7 +2,11 @@ import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import Image from "next/image";
 
-export const DndBox = ({ id, height, width, src, onChange }) => {
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import { useState} from "react";
+
+export const DndBox = ({ id, height, width, trueHeight, trueWidth, src, onChange,deleteMotif }) => {
   const style = {
     marginRight: "1.5rem",
     marginBottom: "1.5rem",
@@ -29,7 +33,21 @@ export const DndBox = ({ id, height, width, src, onChange }) => {
       handlerId: monitor.getHandlerId(),
     }),
   }));
+  
   const opacity = isDragging ? 0.4 : 1;
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (el) => {
+    // console.log("click");
+    setAnchorEl(el);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
   return (
     <>
       {/* <DragPreviewImage connect={preview} src={src} /> */}
@@ -38,14 +56,30 @@ export const DndBox = ({ id, height, width, src, onChange }) => {
         role="Box"
         style={{ ...style, opacity }}
         data-testid={`box-${id}`}
+        onClick={(e)=>{handleClick(e.currentTarget);}}
       >
         <Image 
         src={src} 
         alt="Motif Image" 
-        height={height* 72/ 25.4} 
-        width={width* 72/ 25.4} 
+        width={width}
+        height={height}
+        // width={width < 30 ? width* 72/ 25.4 : 90} 
+        // height={width < 30 ? height* 72/ 25.4 : height/width*90} 
         />
       </div>
+
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem >{trueHeight}*{trueWidth}</MenuItem>
+        <MenuItem onClick={()=>{deleteMotif(id)}}>削除</MenuItem>
+        {/* <MenuItem>サイズ変更</MenuItem> */}
+      </Menu>
+
     </>
   );
   

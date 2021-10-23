@@ -263,6 +263,7 @@ export default function Package() {
           <Grid item xs={3}>
             <Boxes tag="" />
           </Grid>
+          
           <Grid
             item
             xs={9}

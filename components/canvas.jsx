@@ -497,6 +497,7 @@ export default function Canvas() {
     // console.log(stageRef.current.attrs.width);
     stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
     stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
+    stageRef.current.attrs.scaleX=1
   }
   
   const downloadImage = () => {

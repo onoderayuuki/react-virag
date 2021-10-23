@@ -260,14 +260,14 @@ export default function Package() {
       <DndProvider options={HTML5toTouch}>
       <Grid container spacing={0}>
           
-          <Grid item xs={3}>
+          <Grid item xs={3} style={{maxHeight: "100vh", overflow: 'auto'}}>
             <Boxes tag="" />
           </Grid>
           
           <Grid
             item
             xs={9}
-            style={{ backgroundColor: "#660000", height: "100vh" }}
+            style={{ backgroundColor: "#660000", maxHeight: "100vh", overflow: 'auto' }}
           >
             <Input
               color="secondary"

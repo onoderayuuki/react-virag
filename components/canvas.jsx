@@ -31,7 +31,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography";
 
-import { Stage, Layer, Image, Transformer } from "react-konva";
+import { Stage, Layer, Image, Transformer,Line } from "react-konva";
 
 import Header from "./header.js";
 import Toolbar from "./toolbar.jsx";
@@ -766,6 +766,7 @@ const stage = ""
         onTouchEnd={handleTouchEnd}
       >
         <Layer>
+        
           <URLImage
             image={backImage}
             isSelected={false}
@@ -797,6 +798,24 @@ const stage = ""
               />
             );
           })}
+        <Line
+          x={20}
+          y={20}
+          points={[-6000, 0, 6000, 0]}
+          strokeWidth={ 2 } 
+          stroke='rgb(0, 161, 255)'
+          name= 'guid-line'
+          dash={ [4, 6]}
+        />
+        <Line
+          x={20}
+          y={20}
+          points={[0, -6000, 0, 6000]}
+          strokeWidth={ 2 } 
+          stroke='rgb(0, 161, 255)'
+          name= 'guid-line'
+          dash={ [4, 6]}
+        />
         </Layer>
       </Stage>
 

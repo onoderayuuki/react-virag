@@ -18,8 +18,8 @@ import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import LoopRoundedIcon from "@material-ui/icons/LoopRounded";
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import SaveAltRoundedIcon from "@material-ui/icons/SaveAltRounded";
-import ShareRoundedIcon from "@material-ui/icons/ShareRounded";
-import HighlightOffRoundedIcon from '@material-ui/icons/HighlightOffRounded';
+import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
+
 import Chip from "@material-ui/core/Chip";
 // import FaceIcon from '@material-ui/icons/Face';
 import DoneIcon from "@material-ui/icons/Done";
@@ -31,7 +31,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from "@material-ui/core/Typography";
 
-import { Stage, Layer, Image, Transformer } from "react-konva";
+import { Stage, Layer, Image, Transformer,Line } from "react-konva";
 
 import Header from "./header.js";
 import Toolbar from "./toolbar.jsx";
@@ -40,6 +40,16 @@ import { IconButton } from "@material-ui/core";
 import firebase from "firebase/app";
 import { db } from "./firebase";
 import { UserContext } from "../pages/_app";
+
+import Header2 from "../components/header2.js";
+
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
 
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {
   const shapeRef = useRef();
@@ -357,12 +367,15 @@ const stage = ""
     setImages(newImages);
     setHistory([...history, newImages]);
     setHistoryStep(historyStep + 1);
+    setIsConfirm(true);
   };
   const handleUndo = () => {
+    setIsConfirm(true);
     setHistoryStep(historyStep - 1);
     setImages(history[historyStep]);
   };
   const handleRedo = () => {
+    setIsConfirm(true);
     setHistoryStep(historyStep + 1);
     setImages(history[historyStep]);
   };
@@ -538,10 +551,10 @@ const stage = ""
     });
     triggerBase64Download(dataURL, saveId);
   };
-    //保存メッセージ
-    const [saved, setSaved] = useState(false);
-    
 
+    //保存メッセージ
+  const [saved, setSaved] = useState(false);
+    
   const saveDB = () => {
     const scale = 200 / ((backImage.height * 72) / 25.4);
     console.log("save: ", saveId);
@@ -563,6 +576,7 @@ const stage = ""
           console.log("Document written with ID: ", docRef.id);
           setSaveId(docRef.id);
           setSaved(true);
+          setIsConfirm(false);
         })
         .catch((error) => {
           console.error("Error adding document: ", error);
@@ -579,6 +593,7 @@ const stage = ""
         .then(() => {
           console.log("Document successfully written!",saveId);
           setSaved(true);
+          setIsConfirm(false);
         })
         .catch((error) => {
           console.error("Error writing document: ", error);
@@ -586,6 +601,15 @@ const stage = ""
     }
     
   };
+
+  //保存前のページ移動制御
+  const [isConfirm,setIsConfirm] = useState(false);
+  const [leaveOpen,setleaveOpen] = useState(false);
+  const handleCloseSnack =() => {
+    console.log("handleCloseSnack");
+    setSaved(false);
+    setIsConfirm(false);
+  }
 
   //ページの拡大縮小
   const getCenter = (p1, p2) => {
@@ -653,9 +677,19 @@ const stage = ""
     setLastCenter(null);
   };
 
+
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
-      <Header>
+      {isConfirm? "true":"false"}
+      <Header2>
+      <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={()=>{ isConfirm?setleaveOpen(true) : window.location.href='/' }}
+        >
+            <HomeRoundedIcon  fontSize="large" />
+        </IconButton>
         <Typography variant="subtitle1" style={{flexGrow:1}}>
           {Math.ceil(backImage.height)} x {Math.ceil(backImage.width)} mm
         </Typography>
@@ -677,7 +711,9 @@ const stage = ""
             <p style={{ fontSize: "10px", margin: "1px" }}>保存</p>
           </div>
         </IconButton>
-      </Header>
+      </Header2>
+      
+      {/* 保存ダイアログ */}
       <Snackbar
           anchorOrigin={{
             vertical: 'top',
@@ -685,7 +721,7 @@ const stage = ""
           }}
           open={saved}
           autoHideDuration={6000}
-          onClose={()=>{setSaved(false)}}
+          onClose={()=>{handleCloseSnack}}
           message="保存しました"
           action={
             <>
@@ -695,6 +731,7 @@ const stage = ""
             </>
         }
       />
+
       {/* 追加イメージ用モーダル */}
       <Modal
         open={open}
@@ -766,6 +803,7 @@ const stage = ""
         onTouchEnd={handleTouchEnd}
       >
         <Layer>
+        
           <URLImage
             image={backImage}
             isSelected={false}
@@ -797,8 +835,49 @@ const stage = ""
               />
             );
           })}
+        {/* <Line
+          x={20}
+          y={20}
+          points={[-6000, 0, 6000, 0]}
+          strokeWidth={ 2 } 
+          stroke='rgb(0, 161, 255)'
+          name= 'guid-line'
+          dash={ [4, 6]}
+        />
+        <Line
+          x={20}
+          y={20}
+          points={[0, -6000, 0, 6000]}
+          strokeWidth={ 2 } 
+          stroke='rgb(0, 161, 255)'
+          name= 'guid-line'
+          dash={ [4, 6]}
+        /> */}
         </Layer>
       </Stage>
+
+      {/* ページ離脱ダイアログ */}
+      <Dialog
+        open={leaveOpen}
+        onClose={()=>{setleaveOpen(false)}}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"確認"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            保存されていません。<br/> 編集した内容は失われますが、このページを離れてもよろしいですか?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>{setleaveOpen(false)}} color="primary" autoFocus>
+            キャンセル
+          </Button>
+          <Button onClick={()=>{window.location.href='/'}} color="primary">
+            はい
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* FOOTER */}
       <Toolbar>

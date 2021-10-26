@@ -680,7 +680,6 @@ const stage = ""
 
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
-      {isConfirm? "true":"false"}
       <Header2>
       <IconButton
           edge="start"

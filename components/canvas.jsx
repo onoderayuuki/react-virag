@@ -185,7 +185,8 @@ export default function Canvas() {
   //キャンバス用データ
 
   const [backImage, setBackImage] = useState({
-    src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
+    src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/3gjIlAmQqpszdK7c_20211027_100425.jpg?alt=media&token=e287a2ee-39b7-412b-8f58-3b83ff3e0083",
+    // src: "https://firebasestorage.googleapis.com/v0/b/virag-d7f0f.appspot.com/o/zNUDpvE4tkoOeyAU6VcG.png?alt=media&token=d0ed3a29-bb5d-41e5-8129-6a497e96bca9",
     // src: "./back_A4.png",
     x: 0,
     y: 0,

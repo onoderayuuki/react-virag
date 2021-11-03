@@ -256,7 +256,7 @@ export default function Home() {
         </Dialog>
 
         {/* モチーフ部分 */}
-        {/* <Box className={classes.box} mt={8}>
+        <Box className={classes.box} mt={8}>
           <Typography variant="subtitle2" gutterBottom>
             モチーフ
           </Typography>
@@ -301,7 +301,7 @@ export default function Home() {
               </Link>
             </IconButton>
           </Box>
-        </Box> */}
+        </Box>
       </Box>
     </>
   );

@@ -333,8 +333,9 @@ export default function Canvas() {
     }).catch((error) => {
       console.log("Error getting motifs: ", error);
     });
-
+    adjustScale();
   }, []);
+
 const stage = ""
   const handleTouch = (e) => {
     //  console.log(e.target.getStage().scaleX());
@@ -526,21 +527,25 @@ const stage = ""
 
   const stageRef = useRef(null);
 
+  const adjustScale = () =>{
+    //画面に全体が写るようスケールを変更
+    const canvasWidth = window.innerWidth * 0.95
+    const canvasHeight = window.innerHeight * 0.8
+    const backWidth = ((backImage.width * 72) / 25.4)
+    const backHeight = ((backImage.height * 72) / 25.4)
+
+    const scale = Math .min(canvasWidth/backWidth,canvasHeight/backHeight)
+    console.log('adjustScale',scale)
+    stageRef.current.scaleX(scale);
+    stageRef.current.scaleY(scale);
+  }
   const adjustCanvas = () =>{
-    //全体が写るようにスケール変更
-    // console.log(backImage.height);
-    // console.log(stageRef.current.attrs.width);
-    // stage.scaleX(scale);
-    // stageRef.current.attrs.x = 0
-    // stageRef.current.attrs.y = 0
-    // const stage = stageRef.getStage();
-    // console.log(stage)
+    //画像に全体が写るようにキャンバスの大きさを変更
     stageRef.current.scaleX(1);
     stageRef.current.scaleY(1);
     stageRef.current.position({x:0,y:0});
     stageRef.current.attrs.height = ((backImage.height * 72) / 25.4)
     stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
-    
   }
   
   const downloadImage = () => {

@@ -779,7 +779,7 @@ const stage = ""
                             }}
                           />
                           <ImageListItemBar
-                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)+' : ' +motif.id}
+                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)}
                               classes={{
                                 root: classes.titleBar,
                                 subtitle: classes.subtitle,

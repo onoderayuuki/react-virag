@@ -165,10 +165,11 @@ export default function Home() {
                   }}
                   passHref
                 >
-                  <Image src={item.src} alt="#" height="180px" width="135px" />
+                  <Image src={item.src} alt={item.id} height="180px" width="135px" />
                 </Link>
                 {closeButton && item.id != "new" && (
                   <ImageListItemBar
+                    title={item.id}
                     classes={{
                       root: classes.titleBar,
                       title: classes.title,

@@ -5,13 +5,10 @@ import Image from "next/image";
 
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/Button";
-import CropOriginalRoundedIcon from "@material-ui/icons/CropOriginalRounded";
-import ListRoundedIcon from "@material-ui/icons/ListRounded";
-import PhotoAlbumRoundedIcon from "@material-ui/icons/PhotoAlbumRounded";
-import StarBorderIcon from "@material-ui/icons/StarBorder";
 import Button from "@material-ui/core/Button";
 import AccountCircleRoundedIcon from "@material-ui/icons/AccountCircleRounded";
 import CancelRoundedIcon from "@material-ui/icons/CancelRounded";
+import MenuRoundedIcon from '@material-ui/icons/MenuRounded';
 
 import Box from "@material-ui/core/Box";
 import ImageList from "@material-ui/core/ImageList";
@@ -26,6 +23,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Header from "../components/header.js";
+
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 
 import { db } from "../components/firebase";
 import { UserContext } from "./_app";
@@ -87,6 +87,22 @@ export default function Home() {
   //   { id: "3", src: "/canvas-image.png"},
   //   { id: "4", src: "/canvas-image.png"},
   // ]);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [selectedIndex, setSelectedIndex] = React.useState(1);
+
+  const handleClickListItem = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuItemClick = (event, index) => {
+    setSelectedIndex(index);
+    setAnchorEl(null);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
@@ -200,13 +216,24 @@ export default function Home() {
         <Typography variant="h6" style={{ flexGrow: 1 }}>
           Virag
         </Typography>
-        <Button color="inherit">
-          <Link href={"/login"} passHref>
-            <AccountCircleRoundedIcon />
-          </Link>
+        <Button color="inherit" onClick={handleClickListItem}>
+          {/* <Link href={"/login"} passHref>
+          </Link>  */}
+            <MenuRoundedIcon />
         </Button>
+          <Menu
+          id="head-menu"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleMenuClose}
+        >
+            <MenuItem><Link href={"/login"} passHref> アカウント </Link></MenuItem>
+            <MenuItem><Link href={"https://forms.gle/z817bNn8ZM9btttq9"} passHref> お問い合わせ </Link></MenuItem>
+            <MenuItem disabled><Link href={"#"} passHref>使い方 </Link></MenuItem>
+        </Menu>
       </Header>
-
+      
       <Box className={classes.homeContainer} pt={3}>
         <ImageListBox
           title="公開されているデザイン"

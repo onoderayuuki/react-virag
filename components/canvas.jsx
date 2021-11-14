@@ -588,13 +588,15 @@ export default function Canvas() {
 
   const saveDB = () => {
     setSaving(true);
+    setShowGuide(false);
     const scale = 200 / ((backImage.height * 72) / 25.4);
     // console.log("save: ", saveId);
-    console.log(
-      scale,
-      (backImage.height * 72) / 25.4,
-      ((backImage.height * 72) / 25.4) * scale
-    );
+    // console.log(
+    //   scale,
+    //   (backImage.height * 72) / 25.4,
+    //   ((backImage.height * 72) / 25.4) * scale
+    // );
+
     const designRef = db.collection("users").doc(userId).collection("design");
     if (saveId == "new") {
       designRef

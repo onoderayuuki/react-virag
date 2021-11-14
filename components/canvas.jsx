@@ -312,6 +312,7 @@ export default function Canvas() {
           width: dbData.data().width,
           src: dbData.data().src,
           tag: dbData.data().tag,
+          check:false,
         }));
       // );
         const MotifRef2 = db.collection("users").doc(userId).collection("motif");
@@ -323,6 +324,7 @@ export default function Canvas() {
               width: dbData.data().width,
               src: dbData.data().src,
               tag: dbData.data().tag,
+              check:false,
             }));
             const newmotifs = motifs1.concat(motifs2);
             setMotifs([...newmotifs]);
@@ -436,6 +438,9 @@ const stage = ""
 
   //追加エリア内のモチーフクリック
   const handleMotifClick = (motif) => {
+    motif.check=true;
+    // setTimeout(motif.check=false, 100000);
+
     if (addMode == "add") {
       const x = Math.floor(Math.random() * 100);
       const y = Math.floor(Math.random() * 5);
@@ -781,6 +786,7 @@ const stage = ""
                     tag.onoff && motif.src != "" &&(
                           <ImageListItem
                             key={i}
+                            style={motif.check? {filter: 'opacity(50%)'} : ""}
                           >
                           <NextImage
                             key={i}
@@ -788,6 +794,7 @@ const stage = ""
                             alt={"image"}
                             height={100}
                             width={100}
+                            priority={true}
                             onClick={(e) => {
                               handleMotifClick(motif);
                             }}

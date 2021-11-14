@@ -559,11 +559,14 @@ const stage = ""
   };
 
     //保存メッセージ
-  const [saved, setSaved] = useState(false);
+    const [saved, setSaved] = useState(false);
+    const [saving, setSaving] = useState(false);
+
     
   const saveDB = () => {
+    setSaving(true);
     const scale = 200 / ((backImage.height * 72) / 25.4);
-    console.log("save: ", saveId);
+    // console.log("save: ", saveId);
     console.log(
       scale,
       (backImage.height * 72) / 25.4,
@@ -582,6 +585,7 @@ const stage = ""
           console.log("Document written with ID: ", docRef.id);
           setSaveId(docRef.id);
           setSaved(true);
+          setSaving(false);
           setIsConfirm(false);
         })
         .catch((error) => {
@@ -612,8 +616,8 @@ const stage = ""
   const [isConfirm,setIsConfirm] = useState(false);
   const [leaveOpen,setleaveOpen] = useState(false);
   const handleCloseSnack =() => {
-    console.log("handleCloseSnack");
     setSaved(false);
+    setSaving(false);
     setIsConfirm(false);
   }
 
@@ -724,13 +728,23 @@ const stage = ""
             vertical: 'top',
             horizontal: 'left',
           }}
+          open={saving}
+          autoHideDuration={6000}
+          onClose={()=>{handleCloseSnack}}
+          message="保存中です"
+      />
+      <Snackbar
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'left',
+          }}
           open={saved}
           autoHideDuration={6000}
           onClose={()=>{handleCloseSnack}}
           message="保存しました"
           action={
             <>
-              <IconButton size="small" aria-label="close" color="inherit" onClick={()=>{setSaved(false)}}>
+              <IconButton size="small" aria-label="close" color="inherit" onClick={()=>{setSaving(false); setSaved(false);}}>
                 <CloseIcon fontSize="small" />
               </IconButton>
             </>

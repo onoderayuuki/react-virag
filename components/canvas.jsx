@@ -16,22 +16,25 @@ import ArrowForwardIosRoundedIcon from "@material-ui/icons/ArrowForwardIosRounde
 import QueueRoundedIcon from "@material-ui/icons/QueueRounded";
 import DeleteRoundedIcon from "@material-ui/icons/DeleteRounded";
 import LoopRoundedIcon from "@material-ui/icons/LoopRounded";
+import ShareRoundedIcon from '@material-ui/icons/ShareRounded';
 import SaveRoundedIcon from "@material-ui/icons/SaveRounded";
 import SaveAltRoundedIcon from "@material-ui/icons/SaveAltRounded";
 import HomeRoundedIcon from "@material-ui/icons/HomeRounded";
+import MoreHorizRoundedIcon from '@material-ui/icons/MoreHorizRounded';
 
 import Chip from "@material-ui/core/Chip";
 // import FaceIcon from '@material-ui/icons/Face';
-import DoneIcon from "@material-ui/icons/Done";
+// import DoneIcon from "@material-ui/icons/Done";
 import ImageList from "@material-ui/core/ImageList";
 import ImageListItem from "@material-ui/core/ImageListItem";
 import ImageListItemBar from "@material-ui/core/ImageListItemBar";
 import SwapHorizSharpIcon from "@material-ui/icons/SwapHorizSharp";
-import Snackbar from '@material-ui/core/Snackbar';
-import CloseIcon from '@material-ui/icons/Close';
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
+import Switch from "@material-ui/core/Switch";
 
-import { Stage, Layer, Image, Transformer,Line } from "react-konva";
+import { Stage, Layer, Image, Transformer, Line } from "react-konva";
 
 import Header from "./header.js";
 import Toolbar from "./toolbar.jsx";
@@ -43,13 +46,12 @@ import { UserContext } from "../pages/_app";
 
 import Header2 from "../components/header2.js";
 
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {
   const shapeRef = useRef();
@@ -109,12 +111,12 @@ const useStyles = makeStyles((theme) => ({
     height: 450,
   },
   subtitle: {
-    textAlign:'right',
+    textAlign: "right",
   },
   titleBar: {
-    height:"20%",
+    height: "20%",
     background:
-      'linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)',
+      "linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 70%, rgba(0,0,0,0) 100%)",
   },
 }));
 
@@ -123,7 +125,7 @@ export default function Canvas() {
   // const userId = "ZZeI9mOadD7wxmT26dqB";
   const userId = useContext(UserContext);
   const router = useRouter();
-  const [saveId,setSaveId]=useState();
+  const [saveId, setSaveId] = useState();
   const {
     query: { designId },
   } = router;
@@ -201,7 +203,7 @@ export default function Canvas() {
   // ]);
   const [images, setImages] = useState([]);
   const [motifs, setMotifs] = useState([]);
-// const [motifs, setMotifs] = useState([
+  // const [motifs, setMotifs] = useState([
   //   { id: "aaaa", height: "50", width: "50", src: "/test.png", tag: "tag1" },
   //   { id: "bbbb", height: "50", width: "50", src: "/test2.png", tag: "tag2" },
   //   { id: "cccc", height: "100", width: "100", src: "/test3.png", tag: "" },
@@ -212,7 +214,6 @@ export default function Canvas() {
   const seriesID = "e6sk0UkXAxNpLeRlJlFpWzZJNMA3";
   const SeriesRef = db.collection("series").doc(seriesID);
   const MotifRef = db.collection("motif");
-  
 
   //ランダムID生成関数
   function getUniqueStr(myStrong) {
@@ -243,26 +244,28 @@ export default function Canvas() {
             } else {
               // doc.data() will be undefined in this case
               // console.log("No such document!",designId);
-              db.collection("design").doc(designId).get().then((doc2) => {
-                if (doc2.exists) {
-                  // console.log("Document data:", doc.data());
-                  setImages(doc2.data().images);
-                  setBackImage(doc2.data().backImage);
-                } else {
-                  // doc.data() will be undefined in this case
-                  console.log("No such document!",designId);
-                }
-              })
-              .catch((error) => {
-                console.log("Error getting design:", error);
-              });
+              db.collection("design")
+                .doc(designId)
+                .get()
+                .then((doc2) => {
+                  if (doc2.exists) {
+                    // console.log("Document data:", doc.data());
+                    setImages(doc2.data().images);
+                    setBackImage(doc2.data().backImage);
+                  } else {
+                    // doc.data() will be undefined in this case
+                    console.log("No such document!", designId);
+                  }
+                })
+                .catch((error) => {
+                  console.log("Error getting design:", error);
+                });
             }
           })
           .catch((error) => {
             console.log("Error getting design:", error);
           });
       }
-
     }
 
     SeriesRef.get()
@@ -276,69 +279,80 @@ export default function Canvas() {
             return tag != "背景";
           });
           // setTagNames(newTags2);
-          setTagNames([...newTags2,""] );
+          setTagNames([...newTags2, ""]);
 
-          const SeriesRef2 = db.collection("users").doc(userId).collection("series").doc(userId);
+          const SeriesRef2 = db
+            .collection("users")
+            .doc(userId)
+            .collection("series")
+            .doc(userId);
           SeriesRef2.get()
-          .then((doc2) => {
-            console.log(doc2);
-            if (doc2.exists) {
-              let newTags3 = doc2.data().tagNames;
-              const newTags4 = newTags3.filter(function (tag) {
-                return tag != "背景";
-              });
-              console.log([...newTags2,...newTags4]);
-              setTagNames([...newTags2 , ...newTags4,""]);
-            } else {
-              console.log("No such Seriesdocument!",userId);
-            }
-          })
-          .catch((error) => {
-            console.log("Error getting series:", error);
-          });
+            .then((doc2) => {
+              console.log(doc2);
+              if (doc2.exists) {
+                let newTags3 = doc2.data().tagNames;
+                const newTags4 = newTags3.filter(function (tag) {
+                  return tag != "背景";
+                });
+                console.log([...newTags2, ...newTags4]);
+                setTagNames([...newTags2, ...newTags4, ""]);
+              } else {
+                console.log("No such Seriesdocument!", userId);
+              }
+            })
+            .catch((error) => {
+              console.log("Error getting series:", error);
+            });
         } else {
-          console.log("No such Seriesdocument!",seriesID);
+          console.log("No such Seriesdocument!", seriesID);
         }
       })
       .catch((error) => {
         console.log("Error getting series:", error);
       });
-      
-     MotifRef.get().then((snapshot) => {
-      // setMotifs(
+
+    MotifRef.get()
+      .then((snapshot) => {
+        // setMotifs(
         const motifs1 = snapshot.docs.map((dbData) => ({
           id: dbData.id,
           height: dbData.data().height,
           width: dbData.data().width,
           src: dbData.data().src,
           tag: dbData.data().tag,
-          check:false,
+          check: false,
         }));
-      // );
-        const MotifRef2 = db.collection("users").doc(userId).collection("motif");
-        MotifRef2.get().then((snapshot2) => {
-          // setMotifs(
+        // );
+        const MotifRef2 = db
+          .collection("users")
+          .doc(userId)
+          .collection("motif");
+        MotifRef2.get()
+          .then((snapshot2) => {
+            // setMotifs(
             const motifs2 = snapshot2.docs.map((dbData) => ({
               id: dbData.id,
               height: dbData.data().height,
               width: dbData.data().width,
               src: dbData.data().src,
               tag: dbData.data().tag,
-              check:false,
+              check: false,
             }));
             const newmotifs = motifs1.concat(motifs2);
             setMotifs([...newmotifs]);
-          // );        
-        }).catch((error) => {
-          console.log("Error getting motifs: ", error);
-        });
-    }).catch((error) => {
-      console.log("Error getting motifs: ", error);
-    });
+            // );
+          })
+          .catch((error) => {
+            console.log("Error getting motifs: ", error);
+          });
+      })
+      .catch((error) => {
+        console.log("Error getting motifs: ", error);
+      });
     adjustScale();
   }, []);
 
-const stage = ""
+  const stage = "";
   const handleTouch = (e) => {
     //  console.log(e.target.getStage().scaleX());
     let stage = e.target.getStage();
@@ -394,10 +408,10 @@ const stage = ""
     setAddMode(mode);
     let array = [];
 
-    if(mode=="add"){
-      array.push({ name: "all", onoff: false, motifs: motifs })
+    if (mode == "add") {
+      array.push({ name: "all", onoff: false, motifs: motifs });
     }
-    
+
     tagArray.map((tagName) => {
       const thisMotifs = motifs.filter(function (motif) {
         return motif.tag == tagName;
@@ -405,18 +419,18 @@ const stage = ""
       array.push({ name: tagName, onoff: false, motifs: thisMotifs });
     });
 
-    array[0]["onoff"]=true;
+    array[0]["onoff"] = true;
 
     setTags(array);
     // console.log(array);
     setOpen(true);
   };
-    //タグクリック
+  //タグクリック
   const handleTagClick = (i) => {
     // const newTags = tags.slice();
-    const newTags = tags.map((tag)=>{
-      return { ...tag ,onoff : false}
-    })
+    const newTags = tags.map((tag) => {
+      return { ...tag, onoff: false };
+    });
     newTags[i]["onoff"] = true;
     setTags(newTags);
   };
@@ -438,7 +452,7 @@ const stage = ""
 
   //追加エリア内のモチーフクリック
   const handleMotifClick = (motif) => {
-    motif.check=true;
+    motif.check = true;
     // setTimeout(motif.check=false, 100000);
 
     if (addMode == "add") {
@@ -472,10 +486,14 @@ const stage = ""
       ];
       // console.log(newImages);
       updateImages(newImages);
-    }else if (addMode == "back"){
-      setBackImage({...backImage,src: motif.src, width: motif.width, height: motif.height })
+    } else if (addMode == "back") {
+      setBackImage({
+        ...backImage,
+        src: motif.src,
+        width: motif.width,
+        height: motif.height,
+      });
     }
-
   };
 
   //削除
@@ -531,43 +549,43 @@ const stage = ""
   //   'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjEuNv1OCegAAAAMSURBVBhXY/jPYAwAAzQBM849AKsAAAAASUVORK5CYII=';
 
   const stageRef = useRef(null);
+  const canvasWidth = window.innerWidth * 0.95;
+  const canvasHeight = window.innerHeight * 0.8;
 
-  const adjustScale = () =>{
+  const adjustScale = () => {
     //画面に全体が写るようスケールを変更
-    const canvasWidth = window.innerWidth * 0.95
-    const canvasHeight = window.innerHeight * 0.8
-    const backWidth = ((backImage.width * 72) / 25.4)
-    const backHeight = ((backImage.height * 72) / 25.4)
+    const backWidth = (backImage.width * 72) / 25.4;
+    const backHeight = (backImage.height * 72) / 25.4;
 
-    const scale = Math .min(canvasWidth/backWidth,canvasHeight/backHeight)
-    console.log('adjustScale',scale)
+    const scale = Math.min(canvasWidth / backWidth, canvasHeight / backHeight);
+    console.log("adjustScale", scale);
     stageRef.current.scaleX(scale);
     stageRef.current.scaleY(scale);
-  }
-  const adjustCanvas = () =>{
+  };
+  const adjustCanvas = () => {
     //画像に全体が写るようにキャンバスの大きさを変更
     stageRef.current.scaleX(1);
     stageRef.current.scaleY(1);
-    stageRef.current.position({x:0,y:0});
-    stageRef.current.attrs.height = ((backImage.height * 72) / 25.4)
-    stageRef.current.attrs.width = ((backImage.width * 72) / 25.4)
-  }
-  
+    stageRef.current.position({ x: 0, y: 0 });
+    stageRef.current.attrs.height = (backImage.height * 72) / 25.4;
+    stageRef.current.attrs.width = (backImage.width * 72) / 25.4;
+  };
+
   const downloadImage = () => {
     console.log(stageRef.current.attrs);
+    setShowGuide(false);
     adjustCanvas();
     console.log(stageRef.current.attrs);
     const dataURL = stageRef.current.toDataURL({
-      pixelRatio:1
+      pixelRatio: 1,
     });
     triggerBase64Download(dataURL, saveId);
   };
 
-    //保存メッセージ
-    const [saved, setSaved] = useState(false);
-    const [saving, setSaving] = useState(false);
+  //保存メッセージ
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-    
   const saveDB = () => {
     setSaving(true);
     const scale = 200 / ((backImage.height * 72) / 25.4);
@@ -606,7 +624,7 @@ const stage = ""
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         })
         .then(() => {
-          console.log("Document successfully written!",saveId);
+          console.log("Document successfully written!", saveId);
           setSaved(true);
           setIsConfirm(false);
         })
@@ -614,17 +632,16 @@ const stage = ""
           console.error("Error writing document: ", error);
         });
     }
-    
   };
 
   //保存前のページ移動制御
-  const [isConfirm,setIsConfirm] = useState(false);
-  const [leaveOpen,setleaveOpen] = useState(false);
-  const handleCloseSnack =() => {
+  const [isConfirm, setIsConfirm] = useState(false);
+  const [leaveOpen, setleaveOpen] = useState(false);
+  const handleCloseSnack = () => {
     setSaved(false);
     setSaving(false);
     setIsConfirm(false);
-  }
+  };
 
   //ページの拡大縮小
   const getCenter = (p1, p2) => {
@@ -660,7 +677,7 @@ const stage = ""
       const ratio = lastDist ? dist / lastDist : 1;
       const scale = stage.scaleX() * ratio;
       // console.log(dist, lastDist);
-      console.log("stage.scaleX()",stage.scaleX());
+      console.log("stage.scaleX()", stage.scaleX());
       // console.log(ratio,scale)
 
       // local coordinates of center point
@@ -692,21 +709,55 @@ const stage = ""
     setLastCenter(null);
   };
 
+  const [showGuide, setShowGuide] = useState(true);
+  const guideArray = (length) => {
+    const criteria = (length * 72) / 25.4;
+    // const criteria = length;
+    return [
+      // ,criteria/8
+      criteria / 6,
+      criteria / 3,
+      // ,criteria*3/8
+      criteria / 2,
+      // ,criteria*5/8
+      (criteria * 2) / 3,
+      (criteria * 5) / 6,
+      // ,criteria*7/8
+    ];
+  };
+  const vertical = guideArray(backImage.width);
+  const horizontal = guideArray(backImage.height);
 
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
       <Header2>
-      <IconButton
+        <IconButton
           edge="start"
           color="inherit"
           aria-label="menu"
-          onClick={()=>{ isConfirm?setleaveOpen(true) : window.location.href='/' }}
+          onClick={() => {
+            isConfirm ? setleaveOpen(true) : (window.location.href = "/");
+          }}
         >
-            <HomeRoundedIcon  fontSize="large" />
+          <HomeRoundedIcon fontSize="large" />
         </IconButton>
-        <Typography variant="subtitle1" style={{flexGrow:1}}>
-          {Math.ceil(backImage.height)} x {Math.ceil(backImage.width)} mm
-        </Typography>
+
+          <Typography variant="caption" style={{ flexGrow: 1 }}>
+            {Math.ceil(backImage.height)} x {Math.ceil(backImage.width)} mm
+          </Typography>
+        
+          <Box>
+          <Switch
+            checked={showGuide}
+            onChange={() => {
+              setShowGuide(!showGuide);
+            }}
+            color="primary"
+            name="switchGuide"
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+            <p style={{ fontSize: "10px", margin: "1px" ,textAlign:"center",color:"#660000"}}>ガイド線</p>
+          </Box>
 
         <IconButton
           color="primary"
@@ -715,44 +766,68 @@ const stage = ""
         >
           <div>
             <SaveAltRoundedIcon fontSize="large" />
-            <p style={{ fontSize: "9px", margin: "1px" }}>ダウンロード</p>
+            <p style={{ fontSize: "7px", margin: "1px" }}>ダウンロード</p>
           </div>
         </IconButton>
         
+        <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB} disabled>
+          <div>
+            <ShareRoundedIcon fontSize="large" />
+            <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
+          </div>
+        </IconButton>
+
         <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
           <div>
             <SaveRoundedIcon fontSize="large" />
             <p style={{ fontSize: "10px", margin: "1px" }}>保存</p>
           </div>
         </IconButton>
+        
+        {/* <IconButton color="primary" style={{ padding: "4px" }} onClick={downloadImage}>
+            <MoreHorizRoundedIcon fontSize="large" />
+        </IconButton> */}
+
       </Header2>
-      
+
       {/* 保存ダイアログ */}
       <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          open={saving}
-          autoHideDuration={6000}
-          onClose={()=>{handleCloseSnack}}
-          message="保存中です"
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={saving}
+        autoHideDuration={6000}
+        onClose={() => {
+          handleCloseSnack;
+        }}
+        message="保存中です"
       />
       <Snackbar
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'left',
-          }}
-          open={saved}
-          autoHideDuration={6000}
-          onClose={()=>{handleCloseSnack}}
-          message="保存しました"
-          action={
-            <>
-              <IconButton size="small" aria-label="close" color="inherit" onClick={()=>{setSaving(false); setSaved(false);}}>
-                <CloseIcon fontSize="small" />
-              </IconButton>
-            </>
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={saved}
+        autoHideDuration={6000}
+        onClose={() => {
+          handleCloseSnack;
+        }}
+        message="保存しました"
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={() => {
+                setSaving(false);
+                setSaved(false);
+              }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
         }
       />
 
@@ -783,30 +858,35 @@ const stage = ""
               {tags.map((tag) =>
                 tag.motifs.map(
                   (motif, i) =>
-                    tag.onoff && motif.src != "" &&(
-                          <ImageListItem
-                            key={i}
-                            style={motif.check? {filter: 'opacity(50%)'} : ""}
-                          >
-                          <NextImage
-                            key={i}
-                            src={motif.src}
-                            alt={"image"}
-                            height={100}
-                            width={100}
-                            priority={true}
-                            onClick={(e) => {
-                              handleMotifClick(motif);
-                            }}
-                          />
-                          <ImageListItemBar
-                              subtitle={Math.ceil(motif.height) +'x' +Math.ceil(motif.width)}
-                              classes={{
-                                root: classes.titleBar,
-                                subtitle: classes.subtitle,
-                              }}
-                            />
-                        </ImageListItem>
+                    tag.onoff &&
+                    motif.src != "" && (
+                      <ImageListItem
+                        key={i}
+                        style={motif.check ? { filter: "opacity(50%)" } : ""}
+                      >
+                        <NextImage
+                          key={i}
+                          src={motif.src}
+                          alt={"image"}
+                          height={100}
+                          width={100}
+                          priority={true}
+                          onClick={(e) => {
+                            handleMotifClick(motif);
+                          }}
+                        />
+                        <ImageListItemBar
+                          subtitle={
+                            Math.ceil(motif.height) +
+                            "x" +
+                            Math.ceil(motif.width)
+                          }
+                          classes={{
+                            root: classes.titleBar,
+                            subtitle: classes.subtitle,
+                          }}
+                        />
+                      </ImageListItem>
                     )
                 )
               )}
@@ -818,8 +898,8 @@ const stage = ""
       {/* CANVAS */}
       <Stage
         ref={stageRef}
-        width={window.innerWidth * 0.95}
-        height={window.innerHeight * 0.8}
+        width={canvasWidth}
+        height={canvasHeight}
         x={0}
         y={0}
         scaleX={1}
@@ -829,7 +909,6 @@ const stage = ""
         onTouchEnd={handleTouchEnd}
       >
         <Layer>
-        
           <URLImage
             image={backImage}
             isSelected={false}
@@ -838,6 +917,36 @@ const stage = ""
             }}
             onChange={() => {}}
           />
+
+          {showGuide && horizontal.map((h, i) => {
+            return (
+              <Line
+                key={i}
+                x={20}
+                y={h}
+                points={[-6000, 0, 6000, 0]}
+                strokeWidth={2}
+                stroke="#660000"
+                name="guid-line"
+                dash={[4, 6]}
+              />
+            );
+          })}
+          {showGuide && vertical.map((v, i) => {
+            return (
+              <Line
+                key={i}
+                x={v}
+                y={20}
+                points={[0, -6000, 0, 6000]}
+                strokeWidth={2}
+                stroke="#660000"
+                name="guid-line"
+                dash={[4, 6]}
+              />
+            );
+          })}
+
           {images.map((image, i) => {
             return (
               <URLImage
@@ -861,45 +970,42 @@ const stage = ""
               />
             );
           })}
-        {/* <Line
-          x={20}
-          y={20}
-          points={[-6000, 0, 6000, 0]}
-          strokeWidth={ 2 } 
-          stroke='rgb(0, 161, 255)'
-          name= 'guid-line'
-          dash={ [4, 6]}
-        />
-        <Line
-          x={20}
-          y={20}
-          points={[0, -6000, 0, 6000]}
-          strokeWidth={ 2 } 
-          stroke='rgb(0, 161, 255)'
-          name= 'guid-line'
-          dash={ [4, 6]}
-        /> */}
         </Layer>
       </Stage>
 
       {/* ページ離脱ダイアログ */}
       <Dialog
         open={leaveOpen}
-        onClose={()=>{setleaveOpen(false)}}
+        onClose={() => {
+          setleaveOpen(false);
+        }}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{"確認"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            保存されていません。<br/> 編集した内容は失われますが、このページを離れてもよろしいですか?
+            保存されていません。
+            <br />{" "}
+            編集した内容は失われますが、このページを離れてもよろしいですか?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={()=>{setleaveOpen(false)}} color="primary" autoFocus>
+          <Button
+            onClick={() => {
+              setleaveOpen(false);
+            }}
+            color="primary"
+            autoFocus
+          >
             キャンセル
           </Button>
-          <Button onClick={()=>{window.location.href='/'}} color="primary">
+          <Button
+            onClick={() => {
+              window.location.href = "/";
+            }}
+            color="primary"
+          >
             はい
           </Button>
         </DialogActions>

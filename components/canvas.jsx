@@ -53,6 +53,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+import { CopyToClipboard } from 'react-copy-to-clipboard'
+
 const URLImage = ({ image, isSelected, onSelect, onChange }) => {
   const shapeRef = useRef();
   const trRef = useRef();
@@ -644,7 +646,7 @@ export default function Canvas() {
     setSaving(false);
     setIsConfirm(false);
   };
-
+  
   //ページの拡大縮小
   const getCenter = (p1, p2) => {
     return {
@@ -711,6 +713,7 @@ export default function Canvas() {
     setLastCenter(null);
   };
 
+  //ガイド線
   const [showGuide, setShowGuide] = useState(true);
   const guideArray = (length) => {
     const criteria = (length * 72) / 25.4;
@@ -729,6 +732,14 @@ export default function Canvas() {
   };
   const vertical = guideArray(backImage.width);
   const horizontal = guideArray(backImage.height);
+
+  //URL共有
+  const [shared,setShared]=useState(false);
+  const url = window.location.href
+  const handleCloseSnackShare = () => {
+    setShared(false);
+  };
+  
 
   return (
     <div style={{ backgroundColor: "#F6F3EC" }}>
@@ -772,11 +783,13 @@ export default function Canvas() {
           </div>
         </IconButton>
         
-        <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB} disabled>
-          <div>
-            <ShareRoundedIcon fontSize="large" />
-            <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
-          </div>
+        <IconButton color="primary" style={{ padding: "4px" }} >
+            <CopyToClipboard text={url}>
+              <div>
+                  <ShareRoundedIcon fontSize="large" />
+                  <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
+              </div>
+            </CopyToClipboard>
         </IconButton>
 
         <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
@@ -823,8 +836,33 @@ export default function Canvas() {
               aria-label="close"
               color="inherit"
               onClick={() => {
-                setSaving(false);
-                setSaved(false);
+                handleCloseSnack();
+              }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+          </>
+        }
+      />
+    <Snackbar
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        open={shared}
+        autoHideDuration={6000}
+        onClose={() => {
+          handleCloseSnackShare;
+        }}
+        message="URLをコピーしました"
+        action={
+          <>
+            <IconButton
+              size="small"
+              aria-label="close"
+              color="inherit"
+              onClick={() => {
+                handleCloseSnackShare;
               }}
             >
               <CloseIcon fontSize="small" />

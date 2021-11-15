@@ -575,7 +575,7 @@ export default function Canvas() {
 
   const downloadImage = () => {
     console.log(stageRef.current.attrs);
-    setShowGuide(false);
+    // setShowGuide(false);
     adjustCanvas();
     console.log(stageRef.current.attrs);
     const dataURL = stageRef.current.toDataURL({
@@ -590,7 +590,7 @@ export default function Canvas() {
 
   const saveDB = () => {
     setSaving(true);
-    setShowGuide(false);
+    // setShowGuide(false);
     const scale = 200 / ((backImage.height * 72) / 25.4);
     // console.log("save: ", saveId);
     // console.log(

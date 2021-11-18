@@ -553,16 +553,20 @@ export default function Canvas() {
   const stageRef = useRef(null);
   const canvasWidth = window.innerWidth * 0.95;
   const canvasHeight = window.innerHeight * 0.8;
+  const [minScale,setMinScale ] = useState(calculateMinScale);
 
-  const adjustScale = () => {
+  const calculateMinScale = () => {
     //画面に全体が写るようスケールを変更
     const backWidth = (backImage.width * 72) / 25.4;
     const backHeight = (backImage.height * 72) / 25.4;
-
     const scale = Math.min(canvasWidth / backWidth, canvasHeight / backHeight);
-    console.log("adjustScale", scale);
-    stageRef.current.scaleX(scale);
-    stageRef.current.scaleY(scale);
+    return scale();
+  }
+
+  const adjustScale = () => {
+    console.log("adjustScale", minScale);
+    stageRef.current.scaleX(minScale);
+    stageRef.current.scaleY(minScale);
   };
   const adjustCanvas = () => {
     //画像に全体が写るようにキャンバスの大きさを変更
@@ -699,7 +703,7 @@ export default function Canvas() {
       };
 
       // console.log(stage.position(), stage.x(), stage.y());
-      if (scale > 0.1) {
+      if (scale > minScale) {
         stage.scaleX(scale);
         stage.scaleY(scale);
         stage.position(newPos);

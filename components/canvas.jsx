@@ -1100,7 +1100,7 @@ export default function Canvas() {
             <p style={{ fontSize: "10px" }}>コピー</p>
           </div>
         </IconButton>
-        <IconButton
+        {/* <IconButton
           disabled={!selectedId}
           color="primary"
           onClick={handleMirror}
@@ -1110,7 +1110,7 @@ export default function Canvas() {
             <SwapHorizSharpIcon fontSize="large" />
             <p style={{ fontSize: "10px" }}>反転</p>
           </div>
-        </IconButton>
+        </IconButton> */}
         <IconButton
           disabled={!selectedId}
           color="primary"

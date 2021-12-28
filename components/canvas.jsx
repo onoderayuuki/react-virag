@@ -765,7 +765,7 @@ export default function Canvas() {
           </div>
         </IconButton>
         
-        <IconButton color="primary" style={{ padding: "4px" }} >
+        <IconButton color="primary" style={{ padding: "4px" }} onClick={()=>{setShared(true)}}>
             <CopyToClipboard text={url}>
               <div>
                   <ShareRoundedIcon fontSize="large" />
@@ -844,7 +844,7 @@ export default function Canvas() {
               aria-label="close"
               color="inherit"
               onClick={() => {
-                handleCloseSnackShare;
+                handleCloseSnackShare();
               }}
             >
               <CloseIcon fontSize="small" />

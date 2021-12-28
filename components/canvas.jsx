@@ -765,14 +765,14 @@ export default function Canvas() {
           </div>
         </IconButton>
         
-        {/* <IconButton color="primary" style={{ padding: "4px" }} >
+        <IconButton color="primary" style={{ padding: "4px" }} >
             <CopyToClipboard text={url}>
               <div>
                   <ShareRoundedIcon fontSize="large" />
                   <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
               </div>
             </CopyToClipboard>
-        </IconButton> */}
+        </IconButton>
 
         <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
           <div>

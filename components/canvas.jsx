@@ -550,13 +550,12 @@ export default function Canvas() {
     //画面に全体が写るようスケールを変更
     const backWidth = (backImage.width * 72) / 25.4;
     const backHeight = (backImage.height * 72) / 25.4;
-
     const scale = Math.min(canvasWidth / backWidth, canvasHeight / backHeight);
     stageRef.current.scaleX(scale);
     stageRef.current.scaleY(scale);
     setMinScale(scale);
-
   };
+
   const adjustCanvas = () => {
     //画像に全体が写るようにキャンバスの大きさを変更
     stageRef.current.scaleX(1);
@@ -661,7 +660,6 @@ export default function Canvas() {
         y: touch2.clientY,
       };
 
-      // console.log(P1,P2);
 
       const newCenter = getCenter(P1, P2);
       const dist = getDistance(P1, P2);
@@ -682,13 +680,14 @@ export default function Canvas() {
         x: newCenter.x - pointTo.x * scale + dx,
         y: newCenter.y - pointTo.y * scale + dy,
       };
+
       if (scale > minScale) {
         stage.scaleX(scale);
         stage.scaleY(scale);
         stage.position(newPos);
-        setLastDist(dist);
-        setLastCenter(newCenter);
       }
+      setLastDist(dist);
+      setLastCenter(newCenter);
     }
   };
   const handleTouchEnd = () => {

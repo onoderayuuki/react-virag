@@ -64,7 +64,6 @@ const URLImage = ({ image, isSelected, onSelect, onChange }) => {
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
-    // console.log(trRef.current);
   }, [isSelected]);
 
   const [img] = useImage(image.src, "Anonymous");
@@ -227,10 +226,14 @@ export default function Canvas() {
       Math.floor(strong * Math.random()).toString(16)
     );
   }
+  //ローカルデータ
+  const [localOpen, setLocalOpen] = useState(false);
+  const [localImages, setLocalImages] = useState("");
 
   //データ取得
   useEffect(() => {
     setSaveId(designId);
+
     if (userId) {
       const designRef = db.collection("users").doc(userId).collection("design");
 
@@ -240,18 +243,15 @@ export default function Canvas() {
           .get()
           .then((doc) => {
             if (doc.exists) {
-              // console.log("Document data:", doc.data());
               setImages(doc.data().images);
               setBackImage(doc.data().backImage);
             } else {
               // doc.data() will be undefined in this case
-              // console.log("No such document!",designId);
               db.collection("design")
                 .doc(designId)
                 .get()
                 .then((doc2) => {
                   if (doc2.exists) {
-                    // console.log("Document data:", doc.data());
                     setImages(doc2.data().images);
                     setBackImage(doc2.data().backImage);
                   } else {
@@ -273,10 +273,8 @@ export default function Canvas() {
     SeriesRef.get()
       .then((doc) => {
         if (doc.exists) {
-          // console.log("SeriesDocument data:", doc.data());
           let newTags = doc.data().tagNames;
           // newTags.push("");
-          // console.log(newTags);
           const newTags2 = newTags.filter(function (tag) {
             return tag != "背景";
           });
@@ -290,13 +288,11 @@ export default function Canvas() {
             .doc(userId);
           SeriesRef2.get()
             .then((doc2) => {
-              console.log(doc2);
               if (doc2.exists) {
                 let newTags3 = doc2.data().tagNames;
                 const newTags4 = newTags3.filter(function (tag) {
                   return tag != "背景";
                 });
-                console.log([...newTags2, ...newTags4]);
                 setTagNames([...newTags2, ...newTags4, ""]);
               } else {
                 console.log("No such Seriesdocument!", userId);
@@ -352,14 +348,18 @@ export default function Canvas() {
         console.log("Error getting motifs: ", error);
       });
     adjustScale();
+    //履歴読み込み
+    const localData = localStorage.getItem(designId);
+    if(localData){
+      setLocalOpen(true);
+      setLocalImages(JSON.parse(localData));
+    }
+    
   }, []);
 
   const stage = "";
   const handleTouch = (e) => {
-    //  console.log(e.target.getStage().scaleX());
     let stage = e.target.getStage();
-    console.log(stage);
-    console.log(stageRef);
 
     if (e.evt.touches.length >= 2) {
       getMultiTouchOnStage(e.evt.touches[0], e.evt.touches[1], stage);
@@ -371,7 +371,6 @@ export default function Canvas() {
   const [selectedId, selectShape] = useState(null);
   const checkDeselect = (e) => {
     // deselect when clicked on empty area
-    // console.log(e.target);
     const clickedOnEmpty = e.target === e.target.getStage();
     if (clickedOnEmpty) {
       selectShape(null);
@@ -383,8 +382,8 @@ export default function Canvas() {
   const [historyStep, setHistoryStep] = useState(0);
 
   const updateImages = (newImages) => {
-    // console.log("updateImage:",newImages);
     setImages(newImages);
+    localStorage.setItem(saveId, JSON.stringify(newImages));
     setHistory([...history, newImages]);
     setHistoryStep(historyStep + 1);
     setIsConfirm(true);
@@ -406,7 +405,6 @@ export default function Canvas() {
   const [addMode, setAddMode] = useState("change");
 
   const handleOpen = (mode, tagArray) => {
-    console.log(mode);
     setAddMode(mode);
     let array = [];
 
@@ -424,7 +422,6 @@ export default function Canvas() {
     array[0]["onoff"] = true;
 
     setTags(array);
-    // console.log(array);
     setOpen(true);
   };
   //タグクリック
@@ -461,7 +458,6 @@ export default function Canvas() {
       const x = Math.floor(Math.random() * 100);
       const y = Math.floor(Math.random() * 5);
       const randomID = getUniqueStr(10);
-      // console.log(motif,randomID);
       const newImages = [
         ...images,
         {
@@ -486,7 +482,6 @@ export default function Canvas() {
         ...otherImages,
         { ...newOne, src: motif.src, width: motif.width, height: motif.height },
       ];
-      // console.log(newImages);
       updateImages(newImages);
     } else if (addMode == "back") {
       setBackImage({
@@ -522,7 +517,6 @@ export default function Canvas() {
         scaleX: newOne.scaleX,
       },
     ];
-    // console.log(newImages);
     updateImages(newImages);
   };
 
@@ -534,15 +528,12 @@ export default function Canvas() {
       return image.id != selectedId;
     });
     const newImages = [...otherImages, { ...selectImage, scaleX: -nowScaleX }];
-    // console.log({ ...selectImage, x:selectImage.x+300*nowScaleX ,scaleX: -nowScaleX});
     updateImages(newImages);
   };
 
   //入れ替え
   const handleChange = () => {
-    console.log("change");
     const selectImage = images.find((image) => image.id == selectedId);
-    console.log(selectImage.tag);
     handleOpen("change", [selectImage.tag]);
   };
 
@@ -561,7 +552,6 @@ export default function Canvas() {
     const backHeight = (backImage.height * 72) / 25.4;
 
     const scale = Math.min(canvasWidth / backWidth, canvasHeight / backHeight);
-    console.log("adjustScale", scale);
     stageRef.current.scaleX(scale);
     stageRef.current.scaleY(scale);
     setMinScale(scale);
@@ -577,10 +567,8 @@ export default function Canvas() {
   };
 
   const downloadImage = () => {
-    console.log(stageRef.current.attrs);
     // setShowGuide(false);
     adjustCanvas();
-    console.log(stageRef.current.attrs);
     const dataURL = stageRef.current.toDataURL({
       pixelRatio: 1,
     });
@@ -595,12 +583,7 @@ export default function Canvas() {
     setSaving(true);
     // setShowGuide(false);
     const scale = 200 / ((backImage.height * 72) / 25.4);
-    // console.log("save: ", saveId);
-    // console.log(
-    //   scale,
-    //   (backImage.height * 72) / 25.4,
-    //   ((backImage.height * 72) / 25.4) * scale
-    // );
+
 
     const designRef = db.collection("users").doc(userId).collection("design");
     if (saveId == "new") {
@@ -613,6 +596,7 @@ export default function Canvas() {
         })
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
+          localStorage.removeItem('new');
           setSaveId(docRef.id);
           setSaved(true);
           setSaving(false);
@@ -632,6 +616,7 @@ export default function Canvas() {
         })
         .then(() => {
           console.log("Document successfully written!", saveId);
+          localStorage.removeItem(saveId);
           setSaved(true);
           setIsConfirm(false);
         })
@@ -683,9 +668,6 @@ export default function Canvas() {
 
       const ratio = lastDist ? dist / lastDist : 1;
       const scale = stage.scaleX() * ratio;
-      // console.log(dist, lastDist);
-      console.log("stage.scaleX()", stage.scaleX());
-      // console.log(ratio,scale)
 
       // local coordinates of center point
       const pointTo = {
@@ -700,9 +682,6 @@ export default function Canvas() {
         x: newCenter.x - pointTo.x * scale + dx,
         y: newCenter.y - pointTo.y * scale + dy,
       };
-
-      // console.log(stage.position(), stage.x(), stage.y());
-      console.log("scalechange",scale,minScale);
       if (scale > minScale) {
         stage.scaleX(scale);
         stage.scaleY(scale);
@@ -787,14 +766,14 @@ export default function Canvas() {
           </div>
         </IconButton>
         
-        <IconButton color="primary" style={{ padding: "4px" }} >
+        {/* <IconButton color="primary" style={{ padding: "4px" }} >
             <CopyToClipboard text={url}>
               <div>
                   <ShareRoundedIcon fontSize="large" />
                   <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>
               </div>
             </CopyToClipboard>
-        </IconButton>
+        </IconButton> */}
 
         <IconButton color="primary" style={{ padding: "4px" }} onClick={saveDB}>
           <div>
@@ -1001,7 +980,6 @@ export default function Canvas() {
                   selectShape(image.id);
                 }}
                 onChange={(e) => {
-                  console.log(e.target.x());
                   const newImages = images.slice();
                   newImages[i] = {
                     ...image,
@@ -1016,6 +994,45 @@ export default function Canvas() {
           })}
         </Layer>
       </Stage>
+
+      {/* ローカル保存読み込みダイアログ */}
+      <Dialog
+        open={localOpen}
+        onClose={() => {
+          setLocalOpen(false);
+        }}
+        aria-labelledby="local-dialog-title"
+        aria-describedby="local-dialog-description"
+      >
+        <DialogTitle id="local-dialog-title">{"確認"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="local-dialog-description">
+            未保存の前回のバージョンが見つかりました。
+            <br />{" "}
+            復元しますか?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setLocalOpen(false);
+            }}
+            color="primary"
+            autoFocus
+          >
+            キャンセル
+          </Button>
+          <Button
+            onClick={() => {
+              setImages(localImages);
+              setLocalOpen(false);
+            }}
+            color="primary"
+          >
+            はい
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* ページ離脱ダイアログ */}
       <Dialog

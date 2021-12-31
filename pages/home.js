@@ -230,7 +230,7 @@ export default function Home() {
         >
             <MenuItem><Link href={"/login"} passHref> アカウント </Link></MenuItem>
             <MenuItem><Link href={"https://forms.gle/z817bNn8ZM9btttq9"} passHref> お問い合わせ </Link></MenuItem>
-            <MenuItem disabled><Link href={"#"} passHref>使い方 </Link></MenuItem>
+            <MenuItem><Link href={"help"} passHref>使い方 </Link></MenuItem>
         </Menu>
       </Header>
       

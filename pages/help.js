@@ -10,6 +10,7 @@ import howto6 from "../public/howto6.png";
 import howto7 from "../public/howto7.png";
 import howto8 from "../public/howto8.png";
 import howto9 from "../public/howto9.png";
+import howto10 from "../public/howto10.png";
 
 export default function Help() {
   const paperStyle = {
@@ -58,6 +59,15 @@ export default function Help() {
           <Image src={howto5} width={100} height={219} alt = {"#"}></Image>
         </Box>
       </Paper>
+
+      <Paper style={paperStyle}>
+        <Typography variant="body2">グリッド線はオンオフできます<br />
+          ※保存や画像ダウンロードの際も残るため、必要に応じてオフにしてください</Typography>
+        <Box style={{ display: "flex", justifyContent: "space-around" }}>
+          <Image src={howto10} width={100} height={219} alt = {"#"}></Image>
+        </Box>
+      </Paper>
+
 
       <Paper style={paperStyle}>
         <Typography variant="body2">

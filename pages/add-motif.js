@@ -86,7 +86,7 @@ export default function Add() {
     <>
       <Header>
       <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Virag
+        Virág
         </Typography>
       </Header>
       {!isShow && (

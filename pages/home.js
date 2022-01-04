@@ -213,12 +213,15 @@ export default function Home() {
   return (
     <>
       <Header>
-        <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Virag
+      <Typography variant="body2" style={{ flexGrow: 1 }}>
+          ハンガリー毛糸刺繍
         </Typography>
+           <Link href={"https://virag.thebase.in/"} passHref>
+        <Typography variant="h6" style={{ flexGrow: 1 }}>
+          Virág
+        </Typography>
+          </Link>
         <Button color="inherit" onClick={handleClickListItem}>
-          {/* <Link href={"/login"} passHref>
-          </Link>  */}
             <MenuRoundedIcon />
         </Button>
           <Menu
@@ -236,7 +239,7 @@ export default function Home() {
       
       <Box className={classes.homeContainer} pt={3}>
         <ImageListBox
-          title="公開されているデザイン"
+          title="テンプレート"
           itemList={openImages}
         ></ImageListBox>
 

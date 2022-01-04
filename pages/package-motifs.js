@@ -265,8 +265,8 @@ export default function Package() {
             <HomeRoundedIcon  fontSize="large" />
         </IconButton>
       <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Virag
-        </Typography>
+        Virág
+      </Typography>
         <IconButton color="primary" onClick={saveDB}>
           <SaveRoundedIcon fontSize="large" />
         </IconButton>

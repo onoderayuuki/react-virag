@@ -34,7 +34,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import Switch from "@material-ui/core/Switch";
 
-import { Stage, Layer, Image, Transformer, Line } from "react-konva";
+import { Stage, Layer, Image, Transformer, Line,Text } from "react-konva";
 
 import Header from "./header.js";
 import Toolbar from "./toolbar.jsx";
@@ -991,6 +991,7 @@ export default function Canvas() {
               />
             );
           })}
+          <Text x={3} y={3} fontSize={15} fill="white" opacity={0.6} text="https://react-virag.vercel.app/にて作成" />
         </Layer>
       </Stage>
 
@@ -1015,6 +1016,7 @@ export default function Canvas() {
           <Button
             onClick={() => {
               setLocalOpen(false);
+              localStorage.removeItem(designId);
             }}
             color="primary"
             autoFocus

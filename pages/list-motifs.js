@@ -101,7 +101,7 @@ export default function ListMotifs() {
     <>
       <Header>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Virag
+        Virág
         </Typography>
       </Header>
       {!isShow && 

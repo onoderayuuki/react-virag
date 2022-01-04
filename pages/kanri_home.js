@@ -199,7 +199,7 @@ export default function Home() {
     <>
       <Header>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Virag
+          Virág
         </Typography>
         <Button color="inherit">
           <Link href={"/login"} passHref>

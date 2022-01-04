@@ -213,12 +213,12 @@ export default function Home() {
   return (
     <>
       <Header>
-      <Typography variant="body2" style={{ flexGrow: 1 }}>
+      {/* <Typography variant="body2" style={{ flexGrow: 1 }}>
           ハンガリー毛糸刺繍
-        </Typography>
+        </Typography> */}
            <Link href={"https://virag.thebase.in/"} passHref>
         <Typography variant="h6" style={{ flexGrow: 1 }}>
-          Virág
+        ハンガリー毛糸刺繍 Virág
         </Typography>
           </Link>
         <Button color="inherit" onClick={handleClickListItem}>

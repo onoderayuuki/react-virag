@@ -991,7 +991,7 @@ export default function Canvas() {
               />
             );
           })}
-          <Text x={3} y={3} fontSize={15} fill="white" opacity={0.6} text="https://react-virag.vercel.app/にて作成" />
+          <Text x={3} y={3} fontSize={24} fill="white" opacity={0.6} text="https://react-virag.vercel.app/にて作成" />
         </Layer>
       </Stage>
 

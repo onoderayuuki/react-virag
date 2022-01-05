@@ -86,6 +86,7 @@ export default function Help() {
       <Paper style={paperStyle}>
         <Typography variant="body2">
           作者に作成した内容を共有したい場合はこちらでURLをコピペして送ってください
+          <br/>ダウンロードした画像もしくはスクショも添付ください。
         </Typography>
         <Box style={{ display: "flex", justifyContent: "space-around" }}>
           <Image src={howto6} width={100} height={219} alt={"#"}></Image>

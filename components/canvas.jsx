@@ -251,6 +251,7 @@ export default function Canvas() {
                 .doc(designId)
                 .get()
                 .then((doc2) => {
+                  setSaveId("new");
                   if (doc2.exists) {
                     setImages(doc2.data().images);
                     setBackImage(doc2.data().backImage);

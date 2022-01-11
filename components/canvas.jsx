@@ -940,6 +940,12 @@ export default function Canvas() {
             }}
             onChange={() => {}}
           />
+            <Text x={3} y={3} 
+            fontSize={24} 
+            fill="white" 
+            opacity={0.6} 
+            isSelected={false}
+            text="https://react-virag.vercel.app/にて作成" />
 
           {showGuide && horizontal.map((h, i) => {
             return (
@@ -992,7 +998,6 @@ export default function Canvas() {
               />
             );
           })}
-          <Text x={3} y={3} fontSize={24} fill="white" opacity={0.6} text="https://react-virag.vercel.app/にて作成" />
         </Layer>
       </Stage>
 

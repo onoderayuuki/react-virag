@@ -718,7 +718,7 @@ export default function Canvas() {
 
   //URL共有
   const [shared,setShared]=useState(false);
-  const url = window.location.href
+  // const url = window.location.href
   const handleCloseSnackShare = () => {
     setShared(false);
   };
@@ -766,8 +766,8 @@ export default function Canvas() {
           </div>
         </IconButton>
         
-        <IconButton color="primary" style={{ padding: "4px" }} onClick={()=>{setShared(true)}}>
-            <CopyToClipboard text={url}>
+        <IconButton color="primary" style={{ padding: "4px" }} onClick={()=>{ setShared(true)}} disabled={saveId =="new"}>
+            <CopyToClipboard text={"http://localhost:3000/canvas?designId="+saveId}>
               <div>
                   <ShareRoundedIcon fontSize="large" />
                   <p style={{ fontSize: "10px", margin: "1px" }}>共有</p>

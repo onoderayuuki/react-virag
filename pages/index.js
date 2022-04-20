@@ -1,7 +1,10 @@
 import Home from './home.js' 
+import Typography from "@material-ui/core/Typography";
 
 export default function Index() {
   return (
-    <Home />
+    <Typography variant="h6" style={{ flexGrow: 1 }}>
+        ハンガリー毛糸刺繍 Virág
+    </Typography>
   )
 }

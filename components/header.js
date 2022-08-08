@@ -19,7 +19,7 @@ export default function header({children}) {
           color="inherit"
           aria-label="menu"
         >
-        <Link href={"/"} passHref>
+        <Link href={"/home"} passHref>
             <HomeRoundedIcon  fontSize="large" />
           </Link>
         </IconButton>
